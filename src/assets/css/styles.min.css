@@ -1,0 +1,33 @@
+/* styles.min.css */
+.overview-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #2c3e50;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+
+.overview-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  background: linear-gradient(145deg, #ffffff, #f8f9fa);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.overview-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.overview-card .card-subtitle {
+  font-size: 14px;
+  color: #7f8c8d;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+/* Thêm các quy tắc CSS khác từ thẻ <style> trong HTML */
