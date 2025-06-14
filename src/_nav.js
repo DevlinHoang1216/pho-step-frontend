@@ -52,16 +52,6 @@ export default [
       },
       {
         component: 'CNavItem',
-        name: 'Calendar',
-        href: 'https://coreui.io/vue/docs/components/calendar.html',
-        external: true,
-        badge: {
-          color: 'danger',
-          text: 'PRO',
-        },
-      },
-      {
-        component: 'CNavItem',
         name: 'Carousels',
         to: '/base/carousels',
       },
@@ -102,25 +92,6 @@ export default [
       },
       {
         component: 'CNavItem',
-        name: 'Smart Pagination',
-        href: 'https://coreui.io/vue/docs/components/smart-pagination.html',
-        badge: {
-          color: 'danger',
-          text: 'PRO',
-        },
-      },
-      {
-        component: 'CNavItem',
-        name: 'Smart Table',
-        external: true,
-        href: 'https://coreui.io/vue/docs/components/smart-table.html',
-        badge: {
-          color: 'danger',
-          text: 'PRO',
-        },
-      },
-      {
-        component: 'CNavItem',
         name: 'Spinners',
         to: '/base/spinners',
       },
@@ -139,16 +110,6 @@ export default [
         name: 'Tooltips',
         to: '/base/tooltips',
       },
-      {
-        component: 'CNavItem',
-        name: 'Virtual Scroller',
-        href: 'https://coreui.io/vue/docs/components/virtual-scroller.html',
-        external: true,
-        badge: {
-          color: 'danger',
-          text: 'PRO',
-        },
-      }
     ],
   },
   {
@@ -169,16 +130,6 @@ export default [
       },
       {
         component: 'CNavItem',
-        name: 'Loading Button',
-        href: 'https://coreui.io/vue/docs/components/loading-button.html',
-        external: true,
-        badge: {
-          color: 'danger',
-          text: 'PRO',
-        },
-      },
-      {
-        component: 'CNavItem',
         name: 'Dropdowns',
         to: '/buttons/dropdowns',
       },
@@ -192,8 +143,8 @@ export default [
     items: [
       {
         component: 'CNavItem',
-        name: 'Form Control',
-        to: '/forms/form-control',
+        name: 'Kích cỡ',
+        to: '/thuoc-tinh/kich-co',
       },
       {
         component: 'CNavItem',
@@ -203,7 +154,7 @@ export default [
       {
         component: 'CNavItem',
         name: 'Chất liệu',
-        to: '/forms/checks-radios',
+        to: '/thuoc-tinh/chat-lieu',
       },
       {
         component: 'CNavItem',
@@ -212,13 +163,13 @@ export default [
       },
       {
         component: 'CNavItem',
-        name: 'Input Group',
-        to: '/forms/input-group',
+        name: 'Thương hiệu',
+        to: '/thuoc-tinh/thuong-hieu',
       },
       {
         component: 'CNavItem',
-        name: 'Floating Labels',
-        to: '/forms/floating-labels',
+        name: 'Màu sắc',
+        to: '/thuoc-tinh/mau-sac',
       },
     ],
   },

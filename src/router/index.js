@@ -161,9 +161,9 @@ const routes = [
         redirect: '/forms/form-control',
         children: [
           {
-            path: '/forms/form-control',
-            name: 'Form Control',
-            component: () => import('@/views/forms/FormControl.vue'),
+            path: '/thuoc-tinh/kich-co',
+            name: 'Kích cỡ',
+            component: () => import('@/views/forms/KichCo.vue'),
           },
           {
             path: '/forms/select',
@@ -171,9 +171,9 @@ const routes = [
             component: () => import('@/views/forms/Select.vue'),
           },
           {
-            path: '/forms/checks-radios',
+            path: '/thuoc-tinh/chat-lieu',
             name: 'Chất liệu',
-            component: () => import('@/views/forms/ChecksRadios.vue'),
+            component: () => import('@/views/forms/ChatLieu.vue'),
           },
           {
             path: '/forms/range',
@@ -181,14 +181,14 @@ const routes = [
             component: () => import('@/views/forms/Range.vue'),
           },
           {
-            path: '/forms/input-group',
-            name: 'Input Group',
-            component: () => import('@/views/forms/InputGroup.vue'),
+            path: '/thuoc-tinh/thuong-hieu',
+            name: 'Thương hiệu',
+            component: () => import('@/views/forms/ThuongHieu.vue'),
           },
           {
-            path: '/forms/floating-labels',
-            name: 'Floating Labels',
-            component: () => import('@/views/forms/FloatingLabels.vue'),
+            path: '/thuoc-tinh/mau-sac',
+            name: 'Màu sắc',
+            component: () => import('@/views/forms/MauSac.vue'),
           },
           {
             path: '/forms/layout',
