@@ -1,16 +1,16 @@
 <template>
   <div class="container py-4">
-    <h2 class="mb-4 fw-bold" :style="{ color: '#000000' }">Quản Lý Sản Phẩm</h2>
+    <h2 class="mb-4 fw-bold" :style="{ color: '#000000' }">Quan Ly San Pham</h2>
 
     <CInputGroup class="mb-3">
-      <CFormInput v-model="searchQuery" placeholder="Nhập vào tên sản phẩm muốn tìm..." @keyup.enter="searchProducts" class="custom-input"/>
-      <CButton :style="{ backgroundColor: '#000000', borderColor: '#000000', color: '#FFFFFF' }" @click="searchProducts">Tìm kiếm</CButton>
+      <CFormInput v-model="searchQuery" placeholder="Nhap vao ten san pham muon tim..." @keyup.enter="searchProducts" class="custom-input"/>
+      <CButton :style="{ backgroundColor: '#000000', borderColor: '#000000', color: '#FFFFFF' }" @click="searchProducts">Tim kiem</CButton>
     </CInputGroup>
 
     <div class="mb-3">
-      <CButton :style="{ backgroundColor: '#8B0000', borderColor: '#8B0000', color: '#FFFFFF' }" class="me-2" @click="showAddProductModal = true">+ Thêm sản phẩm</CButton>
-      <CButton :style="{ backgroundColor: '#000000', borderColor: '#000000', color: '#FFFFFF' }" class="me-2" @click="viewDetails">Xem chi tiết sản phẩm</CButton>
-      <CButton :style="{ backgroundColor: '#D3D3D3', borderColor: '#D3D3D3', color: '#000000' }" @click="refreshList">Làm mới</CButton>
+      <CButton :style="{ backgroundColor: '#8B0000', borderColor: '#8B0000', color: '#FFFFFF' }" class="me-2" @click="showAddProductModal = true">+ Them san pham</CButton>
+      <CButton :style="{ backgroundColor: '#000000', borderColor: '#000000', color: '#FFFFFF' }" class="me-2" @click="viewDetails">Xem chi tiet san pham</CButton>
+      <CButton :style="{ backgroundColor: '#D3D3D3', borderColor: '#D3D3D3', color: '#000000' }" @click="refreshList">Lam moi</CButton>
     </div>
 
     <div class="table-container">
@@ -18,11 +18,11 @@
         <thead>
           <tr>
             <th class="text-center">STT</th>
-            <th class="text-center">Ảnh</th>
-            <th>Tên sản phẩm</th>
-            <th class="text-end">Số lượng</th>
-            <th class="text-center status-cell">Trạng thái</th>
-            <th class="text-center">Thao tác</th>
+            <th class="text-center">Anh</th>
+            <th>Ten san pham</th>
+            <th class="text-end">So luong</th>
+            <th class="text-center status-cell">Trang thai</th>
+            <th class="text-center">Thao tac</th>
           </tr>
         </thead>
         <tbody>
@@ -60,7 +60,7 @@
         :disabled="currentPage === 1"
         @click="changePage(currentPage - 1)"
       >
-        Trước
+        Truoc
       </CPaginationItem>
       <CPaginationItem
         v-for="page in totalPages"
@@ -80,13 +80,13 @@
 
     <CModal :visible="showAddProductModal" @close="showAddProductModal = false">
       <CModalHeader :style="{ backgroundColor: '#000000', color: '#FFFFFF' }">
-        <CModalTitle :style="{ color: '#FFFFFF' }">Thêm sản phẩm mới</CModalTitle>
+        <CModalTitle :style="{ color: '#FFFFFF' }">Them san pham moi</CModalTitle>
         <CButtonClose @click="showAddProductModal = false" :style="{ color: '#FFFFFF' }" />
       </CModalHeader>
       <CModalBody>
-        <CFormInput v-model="newProductName" placeholder="Tên sản phẩm mới" class="mb-3 custom-input" />
-        <CFormInput v-model="newProductImage" placeholder="URL ảnh sản phẩm (ví dụ: https://example.com/image.jpg)" class="mb-3 custom-input" />
-        <CFormInput type="number" v-model="newProductQuantity" placeholder="Số lượng" class="mb-3 custom-input" />
+        <CFormInput v-model="newProductName" placeholder="Ten san pham moi" class="mb-3 custom-input" />
+        <CFormInput v-model="newProductImage" placeholder="URL anh san pham (vi du: https://example.com/image.jpg)" class="mb-3 custom-input" />
+        <CFormInput type="number" v-model="newProductQuantity" placeholder="So luong" class="mb-3 custom-input" />
         <CFormCheck
           id="flexCheckDefault"
           label="Đang bán"
@@ -94,24 +94,24 @@
         />
       </CModalBody>
       <CModalFooter>
-        <CButton color="secondary" @click="showAddProductModal = false" :style="{ backgroundColor: '#D3D3D3', borderColor: '#D3D3D3', color: '#000000' }">Hủy</CButton>
-        <CButton color="primary" @click="addNewProduct" :style="{ backgroundColor: '#8B0000', borderColor: '#8B0000', color: '#FFFFFF' }">Thêm sản phẩm</CButton>
+        <CButton color="secondary" @click="showAddProductModal = false" :style="{ backgroundColor: '#D3D3D3', borderColor: '#D3D3D3', color: '#000000' }">Huy</CButton>
+        <CButton color="primary" @click="addNewProduct" :style="{ backgroundColor: '#8B0000', borderColor: '#8B0000', color: '#FFFFFF' }">Them san pham</CButton>
       </CModalFooter>
     </CModal>
 
     <CModal :visible="showEditProductModal" @close="showEditProductModal = false">
       <CModalHeader :style="{ backgroundColor: '#000000', color: '#FFFFFF' }">
-        <CModalTitle :style="{ color: '#FFFFFF' }">Sửa tên sản phẩm</CModalTitle>
+        <CModalTitle :style="{ color: '#FFFFFF' }">Sua ten san pham</CModalTitle>
         <CButtonClose @click="showEditProductModal = false" :style="{ color: '#FFFFFF' }" />
       </CModalHeader>
       <CModalBody>
-        <p>Nhập thông tin muốn sửa.</p>
-        <CFormInput v-model="editingProductName" placeholder="Tên sản phẩm" class="mb-3 custom-input" />
-        <CFormInput v-model="editingProductImage" placeholder="URL ảnh sản phẩm (ví dụ: https://example.com/image.jpg)" class="mb-3 custom-input" />
+        <p>Nhap thong tin muon sua.</p>
+        <CFormInput v-model="editingProductName" placeholder="Ten san pham" class="mb-3 custom-input" />
+        <CFormInput v-model="editingProductImage" placeholder="URL anh san pham (vi du: https://example.com/image.jpg)" class="mb-3 custom-input" />
         </CModalBody>
       <CModalFooter>
-        <CButton color="secondary" @click="showEditProductModal = false" :style="{ backgroundColor: '#D3D3D3', borderColor: '#D3D3D3', color: '#000000' }">Hủy</CButton>
-        <CButton color="primary" @click="saveEditedProduct" :style="{ backgroundColor: '#8B0000', borderColor: '#8B0000', color: '#FFFFFF' }">Xác nhận</CButton>
+        <CButton color="secondary" @click="showEditProductModal = false" :style="{ backgroundColor: '#D3D3D3', borderColor: '#D3D3D3', color: '#000000' }">Huy</CButton>
+        <CButton color="primary" @click="saveEditedProduct" :style="{ backgroundColor: '#8B0000', borderColor: '#8B0000', color: '#FFFFFF' }">Xac nhan</CButton>
       </CModalFooter>
     </CModal>
 
@@ -218,16 +218,16 @@ export default {
         const newProductDetailEntry = {
           image: newProduct.image,
           name: newProduct.name,
-          brand: 'Chưa cập nhật',
-          type: 'Chưa cập nhật',
-          color: 'Chưa cập nhật',
-          material: 'Chưa cập nhật',
-          size: 'Chưa cập nhật',
+          brand: 'Chua cap nhat',
+          type: 'Chua cap nhat',
+          color: 'Chua cap nhat',
+          material: 'Chua cap nhat',
+          size: 'Chua cap nhat',
           quantity: newProduct.quantity,
-          price: 0, // Giá mặc định, có thể cần sửa thủ công sau
+          price: 0, // Gia mac dinh, co the can sua thu cong sau
           active: newProduct.active,
         };
-        storedDetailProducts.unshift(newProductDetailEntry); // Thêm vào đầu danh sách chi tiết
+        storedDetailProducts.unshift(newProductDetailEntry); // Them vao dau danh sach chi tiet
         localStorage.setItem('productsDetailData', JSON.stringify(storedDetailProducts));
 
         this.refreshList();
@@ -237,7 +237,7 @@ export default {
         this.newProductQuantity = 0;
         this.newProductActive = true;
       } else {
-        alert('Tên sản phẩm không được để trống!');
+        alert('Ten san pham khong duoc de trong!');
       }
     },
     openEditProductModal(index) {
@@ -250,7 +250,7 @@ export default {
     saveEditedProduct() {
       if (this.editingProductName.trim() && this.editingProductIndex !== -1) {
         const product = this.products[this.editingProductIndex];
-        const oldName = product.name; // Lưu tên cũ để tìm và cập nhật trong productsDetailData
+        const oldName = product.name; // Luu ten cu de tim va cap nhat trong productsDetailData
         product.name = this.editingProductName.trim();
         product.image = this.editingProductImage.trim() || 'https://via.placeholder.com/50';
 
@@ -260,7 +260,7 @@ export default {
         }
         this.saveProducts();
 
-        // Cập nhật tên sản phẩm trong productsDetailData nếu tên cũ khớp
+        // Cap nhat ten san pham trong productsDetailData neu ten cu khop
         const storedDetailProducts = JSON.parse(localStorage.getItem('productsDetailData') || '[]');
         const updatedDetailProducts = storedDetailProducts.map(detail => {
           if (detail.name === oldName) {
@@ -275,11 +275,11 @@ export default {
         this.editingProductImage = '';
         this.editingProductIndex = -1;
       } else {
-        alert('Tên sản phẩm không được để trống!');
+        alert('Ten san pham khong duoc de trong!');
       }
     },
     viewDetails() {
-      this.$router.push({ name: 'Sản Phẩm Chi Tiết' });
+      this.$router.push({ name: 'San Pham Chi Tiet' });
     },
     refreshList() {
       this.loadProducts();
@@ -297,7 +297,7 @@ export default {
       }
       this.saveProducts();
 
-      // Cập nhật trạng thái trong productsDetailData
+      // Cap nhat trang thai trong productsDetailData
       const storedDetailProducts = JSON.parse(localStorage.getItem('productsDetailData') || '[]');
       const updatedDetailProducts = storedDetailProducts.map(detail => {
         if (detail.name === product.name) {
@@ -311,8 +311,8 @@ export default {
       const globalIndex = (this.currentPage - 1) * this.pageSize + index;
       const productToDelete = this.products[globalIndex];
 
-      if (confirm(`Bạn có chắc muốn xóa mềm sản phẩm: ${productToDelete.name}?`)) {
-        // Xóa mềm: đặt active về false
+      if (confirm(`Ban co chac muon xoa mem san pham: ${productToDelete.name}?`)) {
+        // Xoa mem: dat active ve false
         productToDelete.active = false;
         const originalIndex = this.originalProducts.findIndex(p => p === productToDelete);
         if (originalIndex !== -1) {
@@ -320,11 +320,11 @@ export default {
         }
         this.saveProducts();
 
-        // Cập nhật trạng thái trong productsDetailData
+        // Cap nhat trang thai trong productsDetailData
         const storedDetailProducts = JSON.parse(localStorage.getItem('productsDetailData') || '[]');
         const updatedDetailProducts = storedDetailProducts.map(detail => {
           if (detail.name === productToDelete.name) {
-            return { ...detail, active: false }; // Đặt trạng thái về hết hàng
+            return { ...detail, active: false }; // Dat trang thai ve het hang
           }
           return detail;
         });

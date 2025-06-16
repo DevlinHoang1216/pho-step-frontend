@@ -6,7 +6,7 @@ import DefaultLayout from '@/layouts/DefaultLayout'
 const routes = [
   {
     path: '/',
-    name: 'Home',
+    name: 'Trang Chu',
     component: DefaultLayout,
     redirect: '/dashboard',
     children: [
@@ -123,7 +123,7 @@ const routes = [
       },
       {
         path: '/products-manager',
-        name: 'Sản Phẩm',
+        name: 'San Pham',
         component: {
           render() {
             return h(resolveComponent('router-view'))
@@ -137,7 +137,7 @@ const routes = [
           },
           {
             path: 'products-list/detail', // Đảm bảo path này là duy nhất và phản ánh cấu trúc mong muốn
-            name: 'Sản Phẩm Chi Tiết',
+            name: 'San Pham Chi Tiet',
             component: () => import('@/views/products-manager/Products-Detail.vue'),
           },
           {
@@ -210,29 +210,29 @@ const routes = [
         component: () => import('@/views/charts/Charts.vue'),
       },
       {
-        path: '/icons',
-        name: 'Icons',
+        path: '/discount-manager',
+        name: 'Giam Gia',
         component: {
           render() {
             return h(resolveComponent('router-view'))
           },
         },
-        redirect: '/icons/coreui-icons',
+        redirect: '/discount-manager/coupons', // Redirect to coupons by default
         children: [
           {
-            path: '/icons/coreui-icons',
-            name: 'CoreUI Icons',
-            component: () => import('@/views/icons/CoreUIIcons.vue'),
+            path: '/discount-manager/sales',
+            name: 'Dot Giam Gia',
+            component: () => import('@/views/icons/CoreUIIcons.vue'), // Consider changing this component if 'Dot Giam Gia' has a specific view.
           },
           {
-            path: '/icons/brands',
-            name: 'Brands',
-            component: () => import('@/views/icons/Brands.vue'),
+            path: '/discount-manager/coupons',
+            name: 'Phieu Giam Gia',
+            component: () => import('@/views/discount-manager/Coupons.vue'),
           },
           {
-            path: '/icons/flags',
-            name: 'Flags',
-            component: () => import('@/views/icons/Flags.vue'),
+            path: '/discount-manager/coupons/add', // New route for adding coupons
+            name: 'AddCouponPage', // Unique name for this route
+            component: () => import('@/views/discount-manager/AddCouponPage.vue'),
           },
         ],
       },

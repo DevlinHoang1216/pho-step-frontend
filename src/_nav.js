@@ -1,7 +1,7 @@
 export default [
   {
     component: 'CNavItem',
-    name: 'Thống Kê',
+    name: 'Thong Ke',
     to: '/dashboard',
     icon: 'cil-speedometer',
     badge: {
@@ -15,15 +15,9 @@ export default [
   },
   {
     component: 'CNavItem',
-    name: 'Đợt Giảm Giá',
-    to: '/theme/colors',
-    icon: 'cil-drop',
-  },
-  {
-    component: 'CNavItem',
-    name: 'Bán Tại Quầy',
+    name: 'Ban Tai Quay',
     to: '/theme/typography',
-    icon: 'cil-pencil',
+    icon: 'cil-basket', // Changed from cil-pencil to cil-basket for better representation
   },
   {
     component: 'CNavTitle',
@@ -31,9 +25,9 @@ export default [
   },
   {
     component: 'CNavGroup',
-    name: 'Quản Lý Tại Quầy',
+    name: 'Quan Ly Tai Quay',
     to: '/base',
-    icon: 'cil-puzzle',
+    icon: 'cil-puzzle', // Kept cil-puzzle, as it can represent components/structure
     items: [
       {
         component: 'CNavItem',
@@ -153,97 +147,86 @@ export default [
   },
   {
     component: 'CNavGroup',
-    name: 'Quản Lý Sản Phẩm',
+    name: 'Quan Ly San Pham',
     to: '/products-manager',
-    icon: 'cil-sun',
+    icon: 'cil-settings', // Changed from cil-sun to cil-settings for better representation of 'management'
     items: [
       {
         component: 'CNavItem',
-        name: 'Sản Phẩm',
-        icon: 'cil-layers',
+        name: 'San Pham',
+        icon: 'cil-layers', // Kept cil-layers, suitable for products
         to: '/products-manager/products-list',
       },
         {
         component: 'CNavItem',
-        name: 'Thuộc Tính',
+        name: 'Thuoc Tinh',
         to: '/products-manager',
-        icon: 'cil-notes',
+        icon: 'cil-notes', // Kept cil-notes, suitable for attributes
         items: [
       {
         component: 'CNavItem',
-        name: 'Hãng',
+        name: 'Hang',
         to: '/products-manager',
       },
       {
         component: 'CNavItem',
-         name: 'Chất Liệu',
+         name: 'Chat Lieu',
         to: '/products-manager',
       },
       {
         component: 'CNavItem',
-        name: 'Màu Sắc',
+        name: 'Mau Sac',
         to: '/products-manager',
       },
       {
         component: 'CNavItem',
-        name: 'Kích Cỡ',
+        name: 'Kich Co',
         to: '/products-manager',
       },
       {
         component: 'CNavItem',
-        name: 'Loại Giày',
+        name: 'Loai Giay',
         to: '/products-manager',
       },
       {
         component: 'CNavItem',
-        name: 'Nhà Sản Xuất',
+        name: 'Nha San Xuat',
          icon: 'cil-layers',
         to: '/products-manager',
       },
     ],
   },
     ],
-    
   },
-
   {
     component: 'CNavItem',
-    name: 'Hóa Đơn',
+    name: 'Hoa Don',
     to: '/charts',
-    icon: 'cil-chart-pie',
+    icon: 'cil-file', // Changed from cil-chart-pie to cil-file for better representation of 'invoice'
   },
   {
     component: 'CNavGroup',
-    name: 'Phiếu Giảm Giá',
-    to: '/icons',
-    icon: 'cil-star',
+    name: 'Phieu Giam Gia',
+    to: '/discount-manager',
+    icon: 'cil-star', // Kept cil-star, can represent special offers
     items: [
       {
         component: 'CNavItem',
-        name: 'CoreUI Icons',
-        to: '/icons/coreui-icons',
-        badge: {
-          color: 'info',
-          text: 'NEW',
-        },
+        name: 'Dot Giam Gia',
+        to: '/discount-manager/sales',
       },
       {
         component: 'CNavItem',
-        name: 'Brands',
-        to: '/icons/brands',
-      },
-      {
-        component: 'CNavItem',
-        name: 'Flags',
-        to: '/icons/flags',
+        name: 'Phieu Giam Gia',
+        to: '/discount-manager/coupons', // Fixed path: changed from '/discount-manager/coupon' to '/discount-manager/coupons'
       },
     ],
   },
   {
     component: 'CNavGroup',
-    name: 'Nhân Viên',
+    name: 'Nhan Vien',
     to: '/notifications',
-    icon: 'cil-bell',
+    icon: 'cil-people', // Changed from cil-bell to cil-people for better representation of 'employees'
     items: [
 
     ],
@@ -251,9 +234,9 @@ export default [
 
   {
     component: 'CNavItem',
-    name: 'Khách Hàng',
+    name: 'Khach Hang',
     to: '/widgets',
-    icon: 'cil-calculator',
+    icon: 'cil-user', // Changed from cil-calculator to cil-user for better representation of 'customers'
     badge: {
       color: 'primary',
       text: 'NEW',
@@ -266,9 +249,9 @@ export default [
   },
   {
     component: 'CNavGroup',
-    name: 'Nhân Viên',
+    name: 'Nhan Vien',
     to: '/pages',
-    icon: 'cil-star',
+    icon: 'cil-star', // This 'Nhan Vien' group refers to 'Pages', so cil-star is acceptable here for 'extra' pages.
     items: [
       {
         component: 'CNavItem',
