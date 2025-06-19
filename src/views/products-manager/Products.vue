@@ -35,7 +35,7 @@
             <td class="text-end">{{ product.quantity }}</td>
             <td class="text-center status-cell">
               <span :style="{ backgroundColor: product.active ? '#000000' : '#8B0000', color: '#FFFFFF', padding: '0.5rem 1rem', borderRadius: '0.25rem' }">
-                {{ product.active ? 'Đang bán' : 'Hết hàng' }}
+                {{ product.active ? 'Dang ban' : 'Het hang' }}
               </span>
             </td>
             <td class="text-center action-cell">
@@ -89,7 +89,7 @@
         <CFormInput type="number" v-model="newProductQuantity" placeholder="So luong" class="mb-3 custom-input" />
         <CFormCheck
           id="flexCheckDefault"
-          label="Đang bán"
+          label="Dang ban"
           v-model="newProductActive"
         />
       </CModalBody>
@@ -121,10 +121,15 @@
 <script>
 import { CIcon } from '@coreui/icons-vue';
 import * as icon from '@coreui/icons';
+import { inject } from 'vue'; // Import inject de su dung toast
 
 export default {
   components: {
     CIcon
+  },
+  setup() {
+    const toast = inject('$toast'); // Inject toast vao setup
+    return { toast }; // Tra ve toast de co the su dung trong data va methods
   },
   data() {
     return {
@@ -178,7 +183,7 @@ export default {
           { image: 'https://media.canifa.com/Simiconnector/products/giay-sneaker-nam-5.jpg', name: 'Canifa Sneaker Men 2024', quantity: 98, active: true },
           { image: 'https://product.hstatic.net/200000426229/product/giay-thoi-trang-nam-bitis-hunter-x2-men-dsmh09000cam-1_40c0be84933c4e1f8b2d2cb7ae93284c_grande.jpg', name: 'Biti’s Hunter X2', quantity: 138, active: true },
           { image: 'https://down-vn.img.susercontent.com/file/sg-11134201-23010-p39z8vtzghnvb1', name: 'Converse Chuck 70 Classic', quantity: 112, active: true },
-          { image: 'https://cdn.tgdd.vn/Products/Images/9981/318284/giay-the-thao-nam-361-do-ds666010905-202307251146401373.jpg', name: '361 Độ Lifestyle 2024', quantity: 102, active: true },
+          { image: 'https://cdn.tgdd.vn/Products/Images/9981/318284/giay-the-thao-nam-361-do-ds666010905-202307251146401373.jpg', name: '361 Do Lifestyle 2024', quantity: 102, active: true },
           { image: 'https://giaygiare.vn/wp-content/uploads/2022/04/z3362700001143_e53a2b3795894f7451f7e4f89c0de812.jpg', name: 'Vans Old Skool Classic Black', quantity: 150, active: true },
           { image: 'https://bizweb.dktcdn.net/thumb/large/100/347/923/products/giay-thoi-trang-cho-nam-sneaker-zapas-nam-trang-04.jpg', name: 'Zapas Streetstyle White', quantity: 86, active: true },
           { image: 'https://cdn2.yame.vn/pimg/giay-the-thao-05-0020416/1696d7b3-3c83-b900-eec0-001af5e3d8b6.jpg', name: 'YaMe Urban Classic 05', quantity: 143, active: false },
@@ -197,8 +202,10 @@ export default {
           product.name.toLowerCase().includes(this.searchQuery.toLowerCase())
         );
         this.currentPage = 1;
+        this.toast.info(`Da tim thay ${this.products.length} san pham phu hop.`); // Them toast
       } else {
         this.refreshList();
+        this.toast.info('Da lam moi danh sach san pham.'); // Them toast
       }
     },
     addNewProduct() {
@@ -209,11 +216,11 @@ export default {
           quantity: parseInt(this.newProductQuantity, 10) || 0,
           active: this.newProductActive,
         };
-        // Thêm sản phẩm mới vào đầu danh sách
+        // Them san pham moi vao dau danh sach
         this.originalProducts.unshift(newProduct);
         this.saveProducts();
 
-        // Đồng bộ dữ liệu sang Products-Detail.vue
+        // Dong bo du lieu sang Products-Detail.vue
         const storedDetailProducts = JSON.parse(localStorage.getItem('productsDetailData') || '[]');
         const newProductDetailEntry = {
           image: newProduct.image,
@@ -236,8 +243,9 @@ export default {
         this.newProductImage = '';
         this.newProductQuantity = 0;
         this.newProductActive = true;
+        this.toast.success('Them san pham thanh cong!'); // Them toast
       } else {
-        alert('Ten san pham khong duoc de trong!');
+        this.toast.error('Ten san pham khong duoc de trong!'); // Them toast
       }
     },
     openEditProductModal(index) {
@@ -274,8 +282,9 @@ export default {
         this.editingProductName = '';
         this.editingProductImage = '';
         this.editingProductIndex = -1;
+        this.toast.success('Cap nhat san pham thanh cong!'); // Them toast
       } else {
-        alert('Ten san pham khong duoc de trong!');
+        this.toast.error('Ten san pham khong duoc de trong!'); // Them toast
       }
     },
     viewDetails() {
@@ -285,10 +294,12 @@ export default {
       this.loadProducts();
       this.searchQuery = '';
       this.currentPage = 1;
+      this.toast.info('Danh sach san pham da duoc lam moi.'); // Them toast
     },
     toggleStatus(index, event) {
       const globalIndex = (this.currentPage - 1) * this.pageSize + index;
       const product = this.products[globalIndex];
+      const oldActiveStatus = product.active; // Luu trang thai cu de thong bao chinh xac
       product.active = event.target.checked;
 
       const originalIndex = this.originalProducts.findIndex(p => p === product);
@@ -306,6 +317,15 @@ export default {
         return detail;
       });
       localStorage.setItem('productsDetailData', JSON.stringify(updatedDetailProducts));
+
+      // Them toast voi thong bao cu the
+      if (oldActiveStatus !== product.active) {
+        if (product.active) {
+          this.toast.success(`San pham "${product.name}" da duoc chuyen sang trang thai "Dang ban".`);
+        } else {
+          this.toast.warning(`San pham "${product.name}" da duoc chuyen sang trang thai "Het hang".`);
+        }
+      }
     },
     deleteProduct(index) {
       const globalIndex = (this.currentPage - 1) * this.pageSize + index;
@@ -331,6 +351,7 @@ export default {
         localStorage.setItem('productsDetailData', JSON.stringify(updatedDetailProducts));
 
         this.refreshList();
+        this.toast.warning(`San pham "${productToDelete.name}" da duoc chuyen sang trang thai het hang.`); // Them toast
       }
     },
     changePage(page) {
@@ -346,7 +367,7 @@ export default {
 </script>
 
 <style scoped>
-/* Giữ nguyên style từ Products.vue và thêm/sửa một số chi tiết */
+/* Giu nguyen style tu Products.vue va them/sua mot so chi tiet */
 .container {
   padding: 1rem;
 }
@@ -458,8 +479,8 @@ input:checked + .slider:before {
 
 /* Custom input style */
 .custom-input .form-control:focus {
-  border-color: #ced4da !important; /* Màu xám */
-  box-shadow: 0 0 0 0.25rem rgba(108, 117, 125, 0.25) !important; /* Màu xám nhạt */
+  border-color: #ced4da !important; /* Mau xam */
+  box-shadow: 0 0 0 0.25rem rgba(108, 117, 125, 0.25) !important; /* Mau xam nhat */
 }
 
 @media (max-width: 768px) {

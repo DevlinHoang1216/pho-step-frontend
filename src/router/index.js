@@ -224,16 +224,16 @@ const routes = [
             name: 'Dot Giam Gia',
             component: () => import('@/views/icons/CoreUIIcons.vue'), // Consider changing this component if 'Dot Giam Gia' has a specific view.
           },
-          {
-            path: '/discount-manager/coupons',
-            name: 'Phieu Giam Gia',
-            component: () => import('@/views/discount-manager/Coupons.vue'),
-          },
-          {
-            path: '/discount-manager/coupons/add', // New route for adding coupons
-            name: 'AddCouponPage', // Unique name for this route
-            component: () => import('@/views/discount-manager/AddCouponPage.vue'),
-          },
+        {
+    path: '/discount-manager/coupons',
+    name: 'Phieu Giam Gia', // Tên route cho Coupons.vue
+    component: () => import('@/views/discount-manager/Coupons.vue'),
+  },
+  {
+    path: '/discount-manager/coupons/add', // Đây là URL sẽ hiển thị trên trình duyệt
+    name: 'Them Phieu', // TÊN NÀY PHẢI CHÍNH XÁC VỚI { name: 'Them Phieu' } TRONG goToAddCouponPage()
+    component: () => import('@/views/discount-manager/AddCouponPage.vue'), // Đảm bảo đường dẫn này đúng
+  },
         ],
       },
       {

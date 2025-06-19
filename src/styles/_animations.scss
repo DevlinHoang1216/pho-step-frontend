@@ -1,0 +1,41 @@
+// src/styles/_animations.scss
+
+// Keyframes cho hiệu ứng slide-in từ phải
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Keyframes cho hiệu ứng slide-out sang phải
+@keyframes slideOut {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+// Class cơ bản cho animation
+.animated {
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+}
+
+// Class cụ thể cho hiệu ứng vào
+.slideIn {
+  animation-name: slideIn;
+}
+
+// Class cụ thể cho hiệu ứng ra
+.slideOut {
+  animation-name: slideOut;
+}

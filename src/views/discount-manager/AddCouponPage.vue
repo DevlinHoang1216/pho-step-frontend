@@ -1,17 +1,17 @@
 <template>
   <div class="container py-4">
-    <h2 class="mb-4 fw-bold" :style="{ color: '#000000' }">Them Phieu Giam Gia Moi</h2>
+    <h2 class="mb-4 fw-bold" :style="{ color: '#000000' }">Thêm Phiếu Giảm Giá Mới</h2>
 
     <CForm @submit.prevent="submitCoupon" class="coupon-form mb-4 p-4">
-      <h5 class="fw-bold mb-3">Thong tin phieu giam gia</h5>
+      <h5 class="fw-bold mb-3">Thông tin phiếu giảm giá</h5>
 
       <CRow class="mb-3 align-items-center">
         <CCol md="3">
-          <CFormLabel for="couponName" class="col-form-label">Ten phieu giam gia:</CFormLabel>
+          <CFormLabel for="couponName" class="col-form-label">Tên phiếu giảm giá:</CFormLabel>
         </CCol>
         <CCol md="9">
           <CInputGroup>
-            <CFormInput id="couponName" v-model="newCoupon.name" placeholder="Nhap ten phieu giam gia" maxlength="100" required />
+            <CFormInput id="couponName" v-model="newCoupon.name" placeholder="Nhập tên phiếu giảm giá" maxlength="100" />
             <CInputGroupText>{{ newCoupon.name.length }}/100</CInputGroupText>
           </CInputGroup>
         </CCol>
@@ -19,304 +19,300 @@
 
       <CRow class="mb-3 align-items-center">
         <CCol md="3">
-          <CFormLabel for="couponCode" class="col-form-label">Ma phieu giam gia:</CFormLabel>
+          <CFormLabel for="couponType" class="col-form-label">Loại phiếu giảm giá:</CFormLabel>
         </CCol>
         <CCol md="9">
-          <CFormInput id="couponCode" v-model="newCoupon.code" placeholder="Tu dong tao hoac nhap thu cong" :disabled="!isManualCode" />
-          <CFormCheck class="mt-2" label="Tao ma thu cong" v-model="isManualCode" />
-        </CCol>
-      </CRow>
-
-      <CRow class="mb-3 align-items-center">
-        <CCol md="3">
-          <CFormLabel for="couponQuantity" class="col-form-label">So luong phieu:</CFormLabel>
-        </CCol>
-        <CCol md="9">
-          <CFormInput type="number" id="couponQuantity" v-model="newCoupon.quantity" min="0" placeholder="Nhap so luong phieu" required />
-        </CCol>
-      </CRow>
-
-      <CRow class="mb-3 align-items-center">
-        <CCol md="3">
-          <CFormLabel for="couponType" class="col-form-label">Loai phieu giam gia:</CFormLabel>
-        </CCol>
-        <CCol md="9">
-          <CFormSelect id="couponType" v-model="newCoupon.type" required>
-            <option value="">Chon loai phieu</option>
-            <option v-for="type in couponTypes" :key="type" :value="type">{{ type }}</option>
+          <CFormSelect id="couponType" v-model="newCoupon.type">
+            <option value="Công khai">Công khai</option>
+            <option value="Riêng tư">Riêng tư</option>
           </CFormSelect>
         </CCol>
       </CRow>
 
-      <CRow class="mb-3 align-items-center">
+      <CRow class="mb-3 align-items-center" v-if="newCoupon.type === 'Công khai'">
         <CCol md="3">
-          <CFormLabel for="discountType" class="col-form-label">Loai giam gia:</CFormLabel>
+          <CFormLabel for="couponQuantity" class="col-form-label">Số lượng:</CFormLabel>
         </CCol>
         <CCol md="9">
-          <CFormSelect id="discountType" v-model="newCoupon.discountType" required>
-            <option value="">Chon loai giam gia</option>
-            <option v-for="type in discountTypes" :key="type" :value="type">{{ type }}</option>
-          </CFormSelect>
+          <CFormInput id="couponQuantity" type="number" v-model.number="newCoupon.quantity" min="1" placeholder="Nhập số lượng phiếu" />
         </CCol>
       </CRow>
 
       <CRow class="mb-3 align-items-center">
         <CCol md="3">
-          <CFormLabel for="discountValue" class="col-form-label">Gia tri giam:</CFormLabel>
+          <CFormLabel class="col-form-label">Giá trị giảm:</CFormLabel>
         </CCol>
         <CCol md="9">
-          <CFormInput type="number" id="discountValue" v-model="newCoupon.discountValue" min="0" placeholder="Nhap gia tri giam" required />
+          <CInputGroup>
+            <CFormInput type="number" v-model.number="newCoupon.discountValue" placeholder="Nhập giá trị giảm" />
+            <CInputGroupText>
+              <CFormCheck type="radio" name="discountType" id="discountPercent" value="Phần trăm" v-model="newCoupon.discountType" label="%" />
+              <CFormCheck type="radio" name="discountType" id="discountFixed" value="Số tiền cố định" v-model="newCoupon.discountType" label="VND" class="ms-2" />
+            </CInputGroupText>
+          </CInputGroup>
         </CCol>
       </CRow>
 
       <CRow class="mb-3 align-items-center">
         <CCol md="3">
-          <CFormLabel for="minOrderValue" class="col-form-label">Gia tri don hang toi thieu:</CFormLabel>
+          <CFormLabel for="minOrderValue" class="col-form-label">Giá trị đơn hàng tối thiểu:</CFormLabel>
         </CCol>
         <CCol md="9">
-          <CFormInput type="number" id="minOrderValue" v-model="newCoupon.minOrderValue" min="0" placeholder="Nhap gia tri don hang toi thieu" />
+          <CFormInput id="minOrderValue" type="number" v-model.number="newCoupon.minOrderValue" min="0" placeholder="Nhập giá trị đơn hàng tối thiểu" />
         </CCol>
       </CRow>
 
       <CRow class="mb-3 align-items-center">
         <CCol md="3">
-          <CFormLabel for="maxDiscountValue" class="col-form-label">Gia tri giam toi da (Ap dung cho giam gia phan tram):</CFormLabel>
+          <CFormLabel for="maxDiscountValue" class="col-form-label">Giá trị giảm tối đa (Áp dụng cho %):</CFormLabel>
         </CCol>
         <CCol md="9">
-          <CFormInput type="number" id="maxDiscountValue" v-model="newCoupon.maxDiscountValue" min="0" placeholder="Nhap gia tri giam toi da" :disabled="newCoupon.discountType !== 'Phần trăm'" />
+          <CFormInput id="maxDiscountValue" type="number" v-model.number="newCoupon.maxDiscountValue" min="0" placeholder="Nhập giá trị giảm tối đa" :disabled="newCoupon.discountType !== 'Phần trăm'" />
         </CCol>
       </CRow>
 
       <CRow class="mb-3 align-items-center">
         <CCol md="3">
-          <CFormLabel for="startDate" class="col-form-label">Ngay bat dau:</CFormLabel>
+          <CFormLabel for="startDate" class="col-form-label">Ngày bắt đầu:</CFormLabel>
         </CCol>
         <CCol md="9">
-          <CFormInput type="datetime-local" id="startDate" v-model="newCoupon.startDate" required />
+          <CFormInput id="startDate" type="datetime-local" v-model="newCoupon.startDate" />
         </CCol>
       </CRow>
 
       <CRow class="mb-3 align-items-center">
         <CCol md="3">
-          <CFormLabel for="endDate" class="col-form-label">Ngay ket thuc:</CFormLabel>
+          <CFormLabel for="endDate" class="col-form-label">Ngày kết thúc:</CFormLabel>
         </CCol>
         <CCol md="9">
-          <CFormInput type="datetime-local" id="endDate" v-model="newCoupon.endDate" required />
+          <CFormInput id="endDate" type="datetime-local" v-model="newCoupon.endDate" />
         </CCol>
       </CRow>
 
-      <CRow class="mb-3 align-items-start" v-if="newCoupon.type === 'Riêng tư'">
-        <CCol md="3">
-          <CFormLabel for="customerSelect" class="col-form-label">Chon khach hang (ap dung rieng tu):</CFormLabel>
-        </CCol>
-        <CCol md="9">
-          <CFormSelect id="customerSelect" v-model="selectedCustomerId" @change="addCustomerToCoupon" class="custom-select">
-            <option value="">Chon khach hang</option>
-            <option v-for="customer in availableCustomers" :key="customer.id" :value="customer.id">
-              {{ customer.name }} ({{ customer.email }})
-            </option>
-          </CFormSelect>
-          <div class="selected-customers-list mt-2">
-            <CBadge v-for="custId in newCoupon.customerIds" :key="custId" color="info" class="me-1 mb-1 d-inline-flex align-items-center">
-              {{ getCustomerNameById(custId) }}
-              <CButtonClose @click="removeCustomer(custId)" class="ms-2" white />
-            </CBadge>
-            <p v-if="newCoupon.customerIds.length === 0" class="text-muted mt-2">Chua co khach hang nao duoc chon.</p>
-          </div>
-        </CCol>
-      </CRow>
-
-
-      <div class="d-flex justify-content-end gap-2 mt-4">
-        <CButton :style="{ backgroundColor: '#000000', borderColor: '#000000', color: '#FFFFFF' }" type="submit">Tao phieu giam gia</CButton>
-        <CButton :style="{ backgroundColor: '#D3D3D3', borderColor: '#D3D3D3', color: '#000000' }" type="button" @click="resetForm">Dat lai</CButton>
+      <div class="d-flex justify-content-end gap-2">
+        <CButton color="secondary" @click="cancelAdd" :style="{ backgroundColor: '#D3D3D3', borderColor: '#D3D3D3', color: '#000000' }">Hủy</CButton>
+        <CButton type="submit" :style="{ backgroundColor: '#000000', borderColor: '#000000', color: '#FFFFFF' }">Thêm phiếu giảm giá</CButton>
       </div>
     </CForm>
 
-    <h5 class="mb-3 fw-bold">Quan Ly Khach Hang</h5>
-    <div class="mb-3 filter-section">
-      <div class="filters-and-search d-flex flex-wrap align-items-center gap-3">
-        <CInputGroup class="flex-grow-1">
-          <CFormInput v-model="searchCustomerQuery" placeholder="Tim khach hang theo ten, email, CCCD, SDT..." @keyup.enter="filterCustomers" class="custom-input" />
-        </CInputGroup>
+    <div v-if="newCoupon.type === 'Riêng tư'" class="customer-selection-section p-4 mt-4">
+      <h5 class="fw-bold mb-3">Chọn khách hàng áp dụng</h5>
+      <p class="mb-3">Đã chọn: <strong>{{ newCoupon.customerIds.length }}</strong> khách hàng</p>
 
-        <CFormSelect v-model="filterCustomerStatus" class="custom-select flex-grow-1">
-          <option value="">Trang thai (Tat ca)</option>
-          <option value="Hoạt động">Hoat dong</option>
-          <option value="Không hoạt động">Khong hoat dong</option>
-        </CFormSelect>
+      <div class="mb-3 filter-section">
+        <div class="filters-and-search d-flex flex-wrap align-items-center gap-3">
+          <CButton :style="{ backgroundColor: '#000000', borderColor: '#000000', color: '#FFFFFF' }" class="me-2" @click="loadAllCustomers">
+            <CIcon icon="cilCloudDownload" /> Tải lại danh sách khách hàng
+          </CButton>
+          <CInputGroup class="flex-grow-1">
+            <CFormInput v-model="customerSearchQuery" placeholder="Tìm kiếm theo tên, CCCD, SDT, Email..." @keyup.enter="filterCustomers" class="custom-input" />
+          </CInputGroup>
 
-        <label class="col-form-label ms-2 me-2">Độ tuổi:</label>
-        <div class="age-range-slider flex-grow-1 d-flex align-items-center">
-          <span class="me-2">{{ filterCustomerAge[0] }}</span>
-          <CRange v-model="filterCustomerAge" :min="0" :max="100" class="form-range flex-grow-1" />
-          <span class="ms-2">{{ filterCustomerAge[1] }}</span>
+          <CFormSelect v-model="customerStatusFilter" class="custom-select flex-grow-1" @change="filterCustomers">
+            <option value="">Trạng thái (Tất cả)</option>
+            <option value="Hoạt động">Hoạt động</option>
+            <option value="Không hoạt động">Không hoạt động</option>
+          </CFormSelect>
+
+          <CFormInput type="date" v-model="customerDOBStartFilter" class="custom-input flex-grow-1" @change="filterCustomers" />
+          <CFormInput type="date" v-model="customerDOBEndFilter" class="custom-input flex-grow-1" @change="filterCustomers" />
+
+          <div class="flex-grow-1 age-range-slider">
+            <CFormLabel class="mb-0">Khoảng tuổi: {{ ageRange[0] }} - {{ ageRange[1] }}</CFormLabel>
+            <CRow>
+              <CCol><input type="range" class="form-range" min="0" max="100" v-model.lazy="ageRange[0]" @change="filterCustomers" /></CCol>
+              <CCol><input type="range" class="form-range" min="0" max="100" v-model.lazy="ageRange[1]" @change="filterCustomers" /></CCol>
+            </CRow>
+          </div>
+
+          <CButton :style="{ backgroundColor: '#000000', borderColor: '#000000', color: '#FFFFFF' }" class="ms-auto" @click="filterCustomers">
+            <CIcon icon="cilSearch" /> Tìm kiếm
+          </CButton>
+          <CButton :style="{ backgroundColor: '#D3D3D3', borderColor: '#D3D3D3', color: '#000000' }" @click="resetCustomerFilters">
+            <CIcon icon="cilReload" /> Làm mới bộ lọc
+          </CButton>
+          <CButton :style="{ backgroundColor: '#8B0000', borderColor: '#8B0000', color: '#FFFFFF' }" @click="addNewCustomerPlaceholder">
+            <CIcon icon="cilPlus" /> Thêm mới
+          </CButton>
         </div>
-
-        <CButton :style="{ backgroundColor: '#000000', borderColor: '#000000', color: '#FFFFFF' }" class="ms-auto" @click="filterCustomers">
-          <CIcon icon="cilSearch" /> Tim kiem
-        </CButton>
-        <CButton :style="{ backgroundColor: '#D3D3D3', borderColor: '#D3D3D3', color: '#000000' }" @click="resetCustomerFilters">
-          <CIcon icon="cilReload" /> Lam moi bo loc
-        </CButton>
-        <CButton :style="{ backgroundColor: '#000000', borderColor: '#000000', color: '#FFFFFF' }" @click="loadAllCustomers">
-          <CIcon icon="cilCloudDownload" /> Tai lai danh sach khach hang
-        </CButton>
       </div>
-    </div>
 
-    <div class="table-container">
-      <table class="custom-table">
-        <thead>
-          <tr>
-            <th class="text-center">STT</th>
-            <th class="text-center">ID</th>
-            <th class="text-center">Tên khách hàng</th>
-            <th class="text-center">Email</th>
-            <th class="text-center">SDT</th>
-            <th class="text-center">Ngày sinh</th>
-            <th class="text-center">Trạng thái</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(customer, index) in paginatedCustomers" :key="customer.id">
-            <td class="text-center">{{ index + 1 + (currentPageCustomers - 1) * pageSizeCustomers }}</td>
-            <td class="text-center">{{ customer.id }}</td>
-            <td class="text-center">{{ customer.name }}</td>
-            <td class="text-center">{{ customer.email }}</td>
-            <td class="text-center">{{ customer.phone }}</td>
-            <td class="text-center">{{ customer.dob }}</td>
-            <td class="text-center">{{ customer.status }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <div class="table-container">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th class="text-center">STT</th>
+              <th></th>
+              <th>Họ và tên</th>
+              <th>CCCD</th>
+              <th>Email</th>
+              <th>Số Điện thoại</th>
+              <th class="text-center">Ngày sinh</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(customer, index) in paginatedCustomers" :key="customer.id">
+              <td class="text-center">{{ index + 1 + (currentCustomerPage - 1) * customerPageSize }}</td>
+              <td class="text-center">
+                <CFormCheck type="checkbox" :value="customer.id" v-model="newCoupon.customerIds" />
+              </td>
+              <td>{{ customer.name }}</td>
+              <td>{{ customer.cccd }}</td>
+              <td>{{ customer.email }}</td>
+              <td>{{ customer.phone }}</td>
+              <td class="text-center">{{ formatDate(customer.dob) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-    <CPagination align="center" class="mt-3">
-      <CPaginationItem :disabled="currentPageCustomers === 1" @click="changeCustomerPage(currentPageCustomers - 1)">Truoc</CPaginationItem>
-      <CPaginationItem v-for="page in totalPagesCustomers" :key="page" :active="page === currentPageCustomers" @click="changeCustomerPage(page)">
-        {{ page }}
-      </CPaginationItem>
-      <CPaginationItem :disabled="currentPageCustomers === totalPagesCustomers" @click="changeCustomerPage(currentPageCustomers + 1)">Sau</CPaginationItem>
-    </CPagination>
+      <CPagination align="center" class="mt-3">
+        <CPaginationItem
+          :disabled="currentCustomerPage === 1"
+          @click="changeCustomerPage(currentCustomerPage - 1)"
+        >
+          Trước
+        </CPaginationItem>
+        <CPaginationItem
+          v-for="page in totalCustomerPages"
+          :key="page"
+          :active="page === currentCustomerPage"
+          @click="changeCustomerPage(page)"
+        >
+          {{ page }}
+        </CPaginationItem>
+        <CPaginationItem
+          :disabled="currentCustomerPage === totalCustomerPages"
+          @click="changeCustomerPage(currentCustomerPage + 1)"
+        >
+          Sau
+        </CPaginationItem>
+      </CPagination>
+    </div>
   </div>
 </template>
 
 <script>
 import { CIcon } from '@coreui/icons-vue';
 import * as icon from '@coreui/icons';
-import { CFormSelect, CFormCheck, CInputGroup, CInputGroupText, CBadge, CButtonClose } from '@coreui/vue';
+import {
+  CForm,
+  CRow,
+  CCol,
+  CFormLabel,
+  CInputGroup,
+  CFormInput,
+  CInputGroupText,
+  CFormCheck,
+  CFormSelect,
+  CButton,
+  CPagination,
+  CPaginationItem
+} from '@coreui/vue';
+import { inject } from 'vue';
 
 export default {
+  name: 'AddCouponPage',
   components: {
     CIcon,
-    CFormSelect,
-    CFormCheck,
+    CForm,
+    CRow,
+    CCol,
+    CFormLabel,
     CInputGroup,
+    CFormInput,
     CInputGroupText,
-    CBadge,
-    CButtonClose,
+    CFormCheck,
+    CFormSelect,
+    CButton,
+    CPagination,
+    CPaginationItem,
+  },
+  setup() {
+    const toast = inject('$toast');
+    return { toast };
   },
   data() {
+    const now = new Date();
+    const oneYearLater = new Date();
+    oneYearLater.setFullYear(now.getFullYear() + 1);
+
     return {
-      // Coupon form data
       newCoupon: {
         code: '',
         name: '',
         quantity: 1,
-        type: 'Công khai', // Mặc định là Công khai
-        discountType: '',
+        type: 'Công khai',
+        discountType: 'Phần trăm',
         discountValue: 0,
         minOrderValue: 0,
         maxDiscountValue: 0,
-        startDate: this.getFormattedDateTime(new Date()),
-        endDate: this.getFormattedDateTime(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)), // Mặc định 7 ngày sau
+        startDate: this.formatDateForInput(now),
+        endDate: this.formatDateForInput(oneYearLater),
         active: true,
-        customerIds: [], // Dùng cho loại phiếu "Riêng tư"
+        customerIds: [],
       },
-      isManualCode: false, // Để người dùng tự nhập mã hay tạo tự động
-
-      // Customer management data
-      allCustomers: [], // Danh sách khách hàng gốc
-      searchCustomerQuery: '',
-      filterCustomerStatus: '',
-      filterCustomerAge: [18, 60], // Mặc định độ tuổi từ 18 đến 60
-      currentPageCustomers: 1,
-      pageSizeCustomers: 10,
-      
-      // Selected customer for private coupon
-      selectedCustomerId: '', 
-
-      // Dropdown options
-      couponTypes: ['Công khai', 'Riêng tư'],
-      discountTypes: ['Phần trăm', 'Số tiền cố định'],
+      originalCustomers: [],
+      customers: [],
+      customerSearchQuery: '',
+      customerStatusFilter: '',
+      customerDOBStartFilter: '',
+      customerDOBEndFilter: '',
+      ageRange: [0, 100],
+      currentCustomerPage: 1,
+      customerPageSize: 10,
     };
   },
   computed: {
-    // Computed property for customers table pagination and filtering
-    filteredCustomers() {
-      let filtered = [...this.allCustomers]; // Bắt đầu với tất cả khách hàng
-
-      // Lọc theo tìm kiếm
-      if (this.searchCustomerQuery.trim()) {
-        const query = this.searchCustomerQuery.toLowerCase();
-        filtered = filtered.filter(customer =>
-          customer.name.toLowerCase().includes(query) ||
-          customer.email.toLowerCase().includes(query) ||
-          customer.cccd.toLowerCase().includes(query) ||
-          customer.phone.toLowerCase().includes(query)
-        );
-      }
-
-      // Lọc theo trạng thái
-      if (this.filterCustomerStatus) {
-        filtered = filtered.filter(customer => customer.status === this.filterCustomerStatus);
-      }
-
-      // Lọc theo độ tuổi
-      const [minAge, maxAge] = this.filterCustomerAge;
-      filtered = filtered.filter(customer => {
-        const dob = new Date(customer.dob);
-        const today = new Date();
-        let age = today.getFullYear() - dob.getFullYear();
-        const m = today.getMonth() - dob.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-          age--;
-        }
-        return age >= minAge && age <= maxAge;
-      });
-
-      return filtered;
+    totalCustomerPages() {
+      return Math.ceil(this.customers.length / this.customerPageSize);
     },
     paginatedCustomers() {
-      const start = (this.currentPageCustomers - 1) * this.pageSizeCustomers;
-      return this.filteredCustomers.slice(start, start + this.pageSizeCustomers);
+      const start = (this.currentCustomerPage - 1) * this.customerPageSize;
+      return this.customers.slice(start, start + this.customerPageSize);
     },
-    totalPagesCustomers() {
-      return Math.ceil(this.filteredCustomers.length / this.pageSizeCustomers);
+    // Xóa bỏ isDiscountValueInvalid và isTimeRangeInvalid
+    /*
+    isDiscountValueInvalid() {
+      const value = parseFloat(this.newCoupon.discountValue);
+      if (isNaN(value) || value <= 0) return true;
+      if (this.newCoupon.discountType === 'Phần trăm' && value > 100) return true;
+      if (this.newCoupon.discountType === 'Số tiền cố định' && (value < 10000 || value > 1000000)) return true;
+      return false;
     },
-    // Computed property for available customers in private coupon selection
-    availableCustomers() {
-        // Lọc ra những khách hàng chưa được thêm vào phiếu
-        return this.allCustomers.filter(customer => !this.newCoupon.customerIds.includes(customer.id));
+    isTimeRangeInvalid() {
+      const start = new Date(this.newCoupon.startDate);
+      const end = new Date(this.newCoupon.endDate);
+      if (isNaN(start.getTime()) || isNaN(end.getTime())) return true;
+      return start.getTime() >= end.getTime();
     }
+    */
+  },
+  created() {
+    this.loadAllCustomers();
   },
   watch: {
-    // Tự động tạo mã nếu không chọn tạo thủ công
-    isManualCode(newVal) {
-      if (!newVal) {
-        this.newCoupon.code = this.generateCouponCode();
+    'newCoupon.type'(newType) {
+      if (newType === 'Riêng tư') {
+        this.newCoupon.quantity = this.newCoupon.customerIds.length;
       } else {
-        this.newCoupon.code = ''; // Xóa mã nếu chọn nhập thủ công
+        this.newCoupon.customerIds = [];
+        this.newCoupon.quantity = 1;
       }
     },
-    // Reset maxDiscountValue nếu loại giảm giá không phải "Phần trăm"
+    'newCoupon.customerIds': {
+      handler(newCustomerIds) {
+        if (this.newCoupon.type === 'Riêng tư') {
+          this.newCoupon.quantity = newCustomerIds.length;
+        }
+      },
+      deep: true
+    },
     'newCoupon.discountType'(newType) {
       if (newType !== 'Phần trăm') {
         this.newCoupon.maxDiscountValue = 0;
       }
     },
-    // Đảm bảo startDate luôn nhỏ hơn hoặc bằng endDate
     'newCoupon.startDate'(newVal) {
       if (newVal && this.newCoupon.endDate && new Date(newVal) > new Date(this.newCoupon.endDate)) {
         this.newCoupon.endDate = newVal;
@@ -328,15 +324,8 @@ export default {
       }
     }
   },
-  created() {
-    this.loadAllCustomers(); // Tải danh sách khách hàng khi component được tạo
-    // Tạo mã coupon tự động khi khởi tạo nếu không phải mã thủ công
-    if (!this.isManualCode) {
-      this.newCoupon.code = this.generateCouponCode();
-    }
-  },
   methods: {
-    getFormattedDateTime(date) {
+    formatDateForInput(date) {
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const day = String(date.getDate()).padStart(2, '0');
@@ -344,21 +333,12 @@ export default {
       const minutes = String(date.getMinutes()).padStart(2, '0');
       return `${year}-${month}-${day}T${hours}:${minutes}`;
     },
-    generateCouponCode() {
-      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-      let result = '';
-      for (let i = 0; i < 8; i++) {
-        result += characters.charAt(Math.floor(Math.random() * characters.length));
-      }
-      return result;
-    },
     loadAllCustomers() {
       const storedCustomers = localStorage.getItem('customersData');
       if (storedCustomers) {
-        this.allCustomers = JSON.parse(storedCustomers);
+        this.originalCustomers = JSON.parse(storedCustomers);
       } else {
-        // Dummy data for customers if not found in localStorage
-        this.allCustomers = [
+        this.originalCustomers = [
           { id: 'KH001', name: 'Nguyễn Văn A', cccd: '001122334455', email: 'vana@example.com', phone: '0901234567', dob: '1990-05-10', status: 'Hoạt động' },
           { id: 'KH002', name: 'Trần Thị B', cccd: '002233445566', email: 'thib@example.com', phone: '0902345678', dob: '1995-11-20', status: 'Hoạt động' },
           { id: 'KH003', name: 'Lê Văn C', cccd: '003344556677', email: 'vanc@example.com', phone: '0903456789', dob: '1988-01-15', status: 'Không hoạt động' },
@@ -375,93 +355,200 @@ export default {
           { id: 'KH014', name: 'Dương Thị O', cccd: '014455667788', email: 'thio@example.com', phone: '0914567890', dob: '2005-04-14', status: 'Không hoạt động' },
           { id: 'KH015', name: 'Nguyễn Văn P', cccd: '015566778899', email: 'vanp@example.com', phone: '0915678901', dob: '1970-12-01', status: 'Hoạt động' },
         ];
-        localStorage.setItem('customersData', JSON.stringify(this.allCustomers));
+        localStorage.setItem('customersData', JSON.stringify(this.originalCustomers));
       }
-      // SAU KHI TẢI LẠI DANH SÁCH GỐC, GỌI resetCustomerFilters ĐỂ HIỂN THỊ TOÀN BỘ DANH SÁCH
+      this.newCoupon.customerIds = [];
       this.resetCustomerFilters();
     },
-    getCustomerNameById(customerId) {
-      const customer = this.allCustomers.find(c => c.id === customerId);
-      return customer ? customer.name : 'Khong tim thay';
+    filterCustomers() {
+      let filtered = [...this.originalCustomers];
+
+      if (this.customerSearchQuery.trim()) {
+        const query = this.customerSearchQuery.toLowerCase();
+        filtered = filtered.filter(customer =>
+          customer.name.toLowerCase().includes(query) ||
+          customer.cccd.toLowerCase().includes(query) ||
+          customer.phone.toLowerCase().includes(query) ||
+          customer.email.toLowerCase().includes(query)
+        );
+      }
+
+      if (this.customerStatusFilter) {
+        filtered = filtered.filter(customer => customer.status === this.customerStatusFilter);
+      }
+
+      if (this.customerDOBStartFilter) {
+        filtered = filtered.filter(customer => {
+          const customerDob = new Date(customer.dob);
+          const filterDob = new Date(this.customerDOBStartFilter);
+          return customerDob >= filterDob;
+        });
+      }
+
+      if (this.customerDOBEndFilter) {
+        filtered = filtered.filter(customer => {
+          const customerDob = new Date(customer.dob);
+          const filterDob = new Date(this.customerDOBEndFilter);
+          filterDob.setHours(23, 59, 59, 999);
+          return customerDob <= filterDob;
+        });
+      }
+
+      filtered = filtered.filter(customer => {
+        const dob = new Date(customer.dob);
+        if (isNaN(dob.getTime())) return false;
+        const today = new Date();
+        let age = today.getFullYear() - dob.getFullYear();
+        const m = today.getMonth() - dob.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+        return age >= this.ageRange[0] && age <= this.ageRange[1];
+      });
+
+      this.customers = filtered;
+      this.currentCustomerPage = 1;
     },
-    // Logic cho Customer Selection (Phieu rieng tu)
-    addCustomerToCoupon() {
-      if (this.selectedCustomerId && !this.newCoupon.customerIds.includes(this.selectedCustomerId)) {
-        this.newCoupon.customerIds.push(this.selectedCustomerId);
-        this.selectedCustomerId = ''; // Reset dropdown sau khi chọn
+    resetCustomerFilters() {
+      this.customerSearchQuery = '';
+      this.customerStatusFilter = '';
+      this.customerDOBStartFilter = '';
+      this.customerDOBEndFilter = '';
+      this.ageRange = [0, 100];
+      this.filterCustomers();
+      this.toast.info('Đã làm mới bộ lọc khách hàng.');
+    },
+    addNewCustomerPlaceholder() {
+      this.toast.warning('Chức năng "Thêm mới khách hàng" sẽ được phát triển sau.');
+    },
+    changeCustomerPage(page) {
+      if (page >= 1 && page <= this.totalCustomerPages) {
+        this.currentCustomerPage = page;
       }
     },
-    removeCustomer(customerId) {
-      this.newCoupon.customerIds = this.newCoupon.customerIds.filter(id => id !== customerId);
+    generateCouponCode() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let result = '';
+      for (let i = 0; i < 8; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
     },
-
     submitCoupon() {
-      // Validate coupon code
-      if (!this.newCoupon.code) {
-        alert('Mã phiếu giảm giá không được để trống!');
-        return;
-      }
-      // Check for duplicate coupon code if not a manual code (or if manual code and duplicated)
-      const existingCoupons = JSON.parse(localStorage.getItem('couponsData') || '[]');
-      if (existingCoupons.some(coupon => coupon.code === this.newCoupon.code)) {
-        alert('Mã phiếu giảm giá đã tồn tại. Vui lòng nhập mã khác hoặc tạo mã tự động.');
+      // Coupon Name Validation
+      if (!this.newCoupon.name.trim()) {
+        this.toast.error('Tên phiếu giảm giá không được để trống.');
         return;
       }
 
-      // Validate date range
-      if (new Date(this.newCoupon.startDate) > new Date(this.newCoupon.endDate)) {
-        alert('Ngày bắt đầu không thể lớn hơn ngày kết thúc!');
+      // Coupon Type Validation
+      if (!this.newCoupon.type) {
+        this.toast.error('Loại phiếu giảm giá không được để trống.');
         return;
       }
 
-      // Validate customerIds for private coupon
-      if (this.newCoupon.type === 'Riêng tư' && this.newCoupon.customerIds.length === 0) {
-          alert('Phiếu giảm giá "Riêng tư" phải có ít nhất một khách hàng được chọn.');
+      // Quantity Validation (for Public Coupons)
+      if (this.newCoupon.type === 'Công khai' && (this.newCoupon.quantity <= 0 || isNaN(this.newCoupon.quantity))) {
+        this.toast.error('Số lượng phải là một số nguyên dương.');
+        return;
+      }
+
+      // Discount Value Validation
+      const discountValue = parseFloat(this.newCoupon.discountValue);
+      if (isNaN(discountValue) || discountValue <= 0) {
+        this.toast.error('Giá trị giảm phải là một số dương.');
+        return;
+      }
+      if (this.newCoupon.discountType === 'Phần trăm' && discountValue > 100) {
+        this.toast.error('Giá trị giảm phần trăm không được vượt quá 100%.');
+        return;
+      }
+      if (this.newCoupon.discountType === 'Số tiền cố định' && (discountValue < 10000 || discountValue > 1000000)) {
+        this.toast.error('Giá trị giảm số tiền cố định phải từ 10.000 VND đến 1.000.000 VND.');
+        return;
+      }
+
+      // Max Discount Value Validation (for Percentage Discount)
+      // Thêm kiểm tra nếu discountValue là Phần trăm và maxDiscountValue <= 0 (nếu có nhập giá trị)
+      if (this.newCoupon.discountType === 'Phần trăm' && this.newCoupon.maxDiscountValue <= 0 && this.newCoupon.discountValue > 0) {
+          this.toast.error('Giá trị giảm tối đa phải là một số dương khi giảm giá theo phần trăm.');
           return;
       }
 
-      // Save coupon to localStorage
+
+      // Start and End Date Validation
+      const startDate = new Date(this.newCoupon.startDate);
+      const endDate = new Date(this.newCoupon.endDate);
+
+      if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+          this.toast.error('Ngày bắt đầu hoặc ngày kết thúc không hợp lệ.');
+          return;
+      }
+
+      if (startDate.getTime() >= endDate.getTime()) {
+        this.toast.error('Thời gian kết thúc phải sau thời gian bắt đầu.');
+        return;
+      }
+
+      // Customer Selection Validation (for Private Coupons)
+      if (this.newCoupon.type === 'Riêng tư' && this.newCoupon.customerIds.length === 0) {
+        this.toast.error('Vui lòng chọn ít nhất một khách hàng cho phiếu giảm giá riêng tư.');
+        return;
+      }
+
       const coupons = JSON.parse(localStorage.getItem('couponsData') || '[]');
-      coupons.push({ ...this.newCoupon });
+
+      const newCouponData = {
+        ...this.newCoupon,
+        code: this.generateCouponCode(),
+        active: true,
+      };
+
+      if (newCouponData.type === 'Riêng tư') {
+        newCouponData.quantity = newCouponData.customerIds.length;
+      }
+
+      coupons.push(newCouponData);
       localStorage.setItem('couponsData', JSON.stringify(coupons));
-      alert('Đã thêm phiếu giảm giá thành công!');
+      this.toast.success('Phiếu giảm giá đã được thêm thành công.');
       this.resetForm();
+      this.$router.push({ name: 'Phieu Giam Gia' });
     },
     resetForm() {
+      const now = new Date();
+      const oneYearLater = new Date();
+      oneYearLater.setFullYear(now.getFullYear() + 1);
+
       this.newCoupon = {
-        code: this.isManualCode ? '' : this.generateCouponCode(),
+        code: '',
         name: '',
         quantity: 1,
         type: 'Công khai',
-        discountType: '',
+        discountType: 'Phần trăm',
         discountValue: 0,
         minOrderValue: 0,
         maxDiscountValue: 0,
-        startDate: this.getFormattedDateTime(new Date()),
-        endDate: this.getFormattedDateTime(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)),
+        startDate: this.formatDateForInput(now),
+        endDate: this.formatDateForInput(oneYearLater),
         active: true,
         customerIds: [],
       };
-      this.selectedCustomerId = ''; // Reset selected customer for private coupon
-      // Keep isManualCode as is, or reset if desired: this.isManualCode = false;
+      this.customerSearchQuery = '';
+      this.customerStatusFilter = '';
+      this.customerDOBStartFilter = '';
+      this.customerDOBEndFilter = '';
+      this.ageRange = [0, 100];
+      this.currentCustomerPage = 1;
+      this.filterCustomers();
     },
-
-    // Customer table filtering methods
-    filterCustomers() {
-      this.currentPageCustomers = 1; // Reset to first page when applying filters
-      // The computed property `filteredCustomers` will automatically react to changes in filter variables.
-    },
-    resetCustomerFilters() {
-      this.searchCustomerQuery = '';
-      this.filterCustomerStatus = '';
-      this.filterCustomerAge = [18, 60]; // Reset to default range
-      this.currentPageCustomers = 1;
-      // The computed property `filteredCustomers` will automatically react to these changes.
-    },
-    changeCustomerPage(page) {
-      if (page >= 1 && page <= this.totalPagesCustomers) {
-        this.currentPageCustomers = page;
+    cancelAdd() {
+      if (confirm('Bạn có chắc chắn muốn hủy bỏ việc thêm phiếu giảm giá?')) {
+        this.$router.push({ name: 'Phieu Giam Gia' });
       }
+    },
+    formatDate(dateString) {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return dateString;
+      return date.toLocaleDateString('vi-VN');
     },
   },
   icons: {
@@ -472,8 +559,7 @@ export default {
 
 <style scoped>
 .container {
-  font-family: 'Arial', sans-serif;
-  color: #333;
+  padding: 1rem;
 }
 
 h2 {
@@ -483,68 +569,48 @@ h2 {
 }
 
 .coupon-form,
-.filter-section {
+.customer-selection-section {
   background-color: #f8f9fa;
-  padding: 1.5rem;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
 }
 
-.form-label {
-  font-weight: bold;
-}
-
-.custom-input,
-.custom-select {
+.filter-section {
+  background-color: #ffffff;
+  padding: 1rem;
   border-radius: 0.5rem;
-  border: 1px solid #ced4da;
-  padding: 0.5rem 0.75rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.custom-input:focus,
-.custom-select:focus {
-  border-color: #8B0000;
-  box-shadow: 0 0 0 0.25rem rgba(139, 0, 0, 0.25);
+.filters-and-search {
+  justify-content: flex-start;
 }
 
-.btn {
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  font-weight: bold;
+.filters-and-search .flex-grow-1 {
+  flex-basis: 0;
+  min-width: 180px;
+}
+
+.filters-and-search .ms-auto {
+  margin-left: auto !important;
+}
+
+.filters-and-search .btn {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Specific button styles */
-.btn[type="submit"],
-.btn[type="button"][style*="background-color: rgb(0, 0, 0)"] { /* for "Tao phieu giam gia" and "Tai lai danh sach khach hang" */
-  background-color: #000000 !important;
-  border-color: #000000 !important;
-  color: #FFFFFF !important;
+.filters-and-search .btn .cil-search,
+.filters-and-search .btn .cil-reload,
+.filters-and-search .btn .cil-plus,
+.filters-and-search .btn .cil-cloud-download {
+  margin-right: 0.25rem;
 }
-
-.btn[type="submit"]:hover,
-.btn[type="button"][style*="background-color: rgb(0, 0, 0)"]:hover {
-  background-color: #333333 !important;
-  border-color: #333333 !important;
-}
-
-.btn[style*="background-color: rgb(211, 211, 211)"] { /* for "Dat lai" and "Lam moi bo loc" */
-  background-color: #D3D3D3 !important;
-  border-color: #D3D3D3 !important;
-  color: #000000 !important;
-}
-
-.btn[style*="background-color: rgb(211, 211, 211)"]:hover {
-  background-color: #B0B0B0 !important;
-  border-color: #B0B0B0 !important;
-}
-
 
 .table-container {
   overflow-x: auto;
+  max-width: 100%;
   margin-top: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -562,7 +628,7 @@ h2 {
   padding: 0.5rem 0.8rem;
   border-bottom: 1px solid #dee2e6;
   text-align: left;
-  white-space: nowrap; /* Prevent text wrapping in table cells */
+  white-space: nowrap;
 }
 
 .custom-table th {
@@ -580,48 +646,76 @@ h2 {
   background-color: #f8f9fa;
 }
 
-.age-range-slider {
+.custom-input,
+.custom-select {
+  border-radius: 0.5rem;
+  border: 1px solid #ced4da;
+  padding: 0.5rem 0.75rem;
+}
+
+.custom-input:focus,
+.custom-select:focus {
+  border-color: #8B0000;
+  box-shadow: 0 0 0 0.25rem rgba(139, 0, 0, 0.25);
+}
+
+.age-range-slider .form-range {
+  padding: 0;
   width: 100%;
-  max-width: 200px; /* Adjust as needed */
+}
+.age-range-slider .form-range::-webkit-slider-thumb {
+  background-color: #000000;
+}
+.age-range-slider .form-range::-moz-range-thumb {
+  background-color: #000000;
 }
 
-/* Styles for selected customer badges */
-.selected-customers-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+.btn {
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
 }
 
-.selected-customers-list .badge {
-  background-color: #000000; /* Dark background for badges */
-  color: #FFFFFF;
-  padding: 0.5em 0.75em;
-  border-radius: 0.25rem;
-  font-size: 0.85em;
-  display: inline-flex;
-  align-items: center;
-  white-space: nowrap;
+.btn[style*="background-color: rgb(0, 0, 0)"] {
+  background-color: #000000 !important;
+  border-color: #000000 !important;
+  color: #FFFFFF !important;
 }
 
-.selected-customers-list .btn-close {
-  font-size: 0.7em;
-  margin-left: 0.5em;
-  opacity: 0.8;
+.btn[style*="background-color: rgb(0, 0, 0)"]:hover {
+  background-color: #333333 !important;
+  border-color: #333333 !important;
 }
 
-.selected-customers-list .btn-close:hover {
-  opacity: 1;
+.btn[style*="background-color: rgb(211, 211, 211)"] {
+  background-color: #D3D3D3 !important;
+  border-color: #D3D3D3 !important;
+  color: #000000 !important;
 }
 
-/* Pagination styles */
+.btn[style*="background-color: rgb(211, 211, 211)"]:hover {
+  background-color: #B0B0B0 !important;
+  border-color: #B0B0B0 !important;
+}
+
+.btn[style*="background-color: rgb(139, 0, 0)"] {
+  background-color: #8B0000 !important;
+  border-color: #8B0000 !important;
+  color: #FFFFFF !important;
+}
+
+.btn[style*="background-color: rgb(139, 0, 0)"]:hover {
+  background-color: #6a0000 !important;
+  border-color: #6a0000 !important;
+}
+
 .page-item .page-link {
-  color: #000000; /* Black for page numbers */
+  color: #000000;
   border-color: #dee2e6;
 }
 
 .page-item.active .page-link {
-  background-color: #000000; /* Black for active page */
+  background-color: #000000;
   border-color: #000000;
   color: #FFFFFF;
 }
@@ -630,38 +724,23 @@ h2 {
   color: #6c757d;
 }
 
-/* Icon spacing */
-.btn .cil-search,
-.btn .cil-reload,
-.btn .cil-cloud-download {
-  margin-right: 0.25rem;
-}
-
-/* Responsive adjustments */
 @media (max-width: 992px) {
-  .coupon-form,
-  .filter-section {
-    padding: 1rem;
-  }
-  .table-container {
-    min-width: 100%;
-  }
   .custom-table th,
   .custom-table td {
     padding: 0.4rem 0.6rem;
     font-size: 0.8em;
   }
-  .btn {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.85rem;
-  }
+
   .filters-and-search {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.5rem;
   }
+
   .filters-and-search > * {
     width: 100%;
   }
+
   .filters-and-search .ms-auto {
     margin-left: 0 !important;
   }
@@ -669,10 +748,29 @@ h2 {
 
 @media (max-width: 768px) {
   h2 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
   }
-  .coupon-form h5 {
-    font-size: 1.2rem;
+
+  .coupon-form,
+  .customer-selection-section {
+    padding: 1rem;
+  }
+
+  .custom-table th,
+  .custom-table td {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.75em;
+  }
+
+  .custom-input,
+  .custom-select {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .btn {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
   }
 }
 </style>

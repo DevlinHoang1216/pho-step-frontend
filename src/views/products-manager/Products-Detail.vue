@@ -101,7 +101,7 @@
             <td class="text-end">{{ product.price }} VND</td>
             <td class="text-center status-cell">
               <span :style="{ backgroundColor: product.active ? '#000000' : '#8B0000', color: '#FFFFFF', padding: '0.5rem 1rem', borderRadius: '0.25rem' }">
-                {{ product.active ? 'Đang bán' : 'Hết hàng' }}
+                {{ product.active ? 'Dang ban' : 'Het hang' }}
               </span>
             </td>
             <td class="text-center action-cell">
@@ -163,7 +163,7 @@
         <CFormInput type="number" v-model="newProductDetail.price" label="Gia" class="mb-3 custom-input" />
         <CFormCheck
           id="flexCheckDefaultDetail"
-          label="Đang bán"
+          label="Dang ban"
           v-model="newProductDetail.active"
         />
       </CModalBody>
@@ -202,10 +202,15 @@
 import { CIcon } from '@coreui/icons-vue';
 import * as icon from '@coreui/icons';
 import * as XLSX from 'xlsx';
+import { inject } from 'vue'; // Import inject để sử dụng toast
 
 export default {
   components: {
     CIcon
+  },
+  setup() {
+    const toast = inject('$toast'); // Inject toast vào setup
+    return { toast }; // Trả về toast để có thể sử dụng trong data và methods
   },
   data() {
     return {
@@ -299,6 +304,11 @@ export default {
     },
     searchProducts() {
       this.filterAndSortProducts();
+      if (this.searchQuery.trim()) {
+        this.toast.info(`Da tim thay ${this.products.length} san pham phu hop.`); // Them toast
+      } else {
+        this.toast.info('Da lam moi danh sach san pham chi tiet.'); // Them toast
+      }
     },
     filterAndSortProducts() {
       let filtered = [...this.originalProducts];
@@ -361,27 +371,27 @@ export default {
         this.newProductDetail.name = '';
         this.newProductDetail.image = '';
         if (this.newProductDetail.parentProductId) { // Chi thong bao neu nguoi dung da nhap gi do
-            alert('Khong tim thay san pham goc voi ID nay. Vui long kiem tra lai.');
+            this.toast.error('Khong tim thay san pham goc voi ID nay. Vui long kiem tra lai.'); // Them toast
         }
       }
     },
     addNewProductDetail() {
       if (!this.newProductDetail.parentProductId) {
-        alert('Vui long nhap ID san pham goc.');
+        this.toast.error('Vui long nhap ID san pham goc.'); // Them toast
         return;
       }
       if (!this.newProductDetail.name) { // Kiem tra xem ten san pham da duoc tu dong dien chua
-        alert('ID san pham goc khong hop le hoac chua duoc tai thong tin.');
+        this.toast.error('ID san pham goc khong hop le hoac chua duoc tai thong tin.'); // Them toast
         return;
       }
       if (this.newProductDetail.quantity < 0 || this.newProductDetail.price < 0) {
-        alert('So luong va gia phai lon hon hoac bang 0.');
+        this.toast.error('So luong va gia phai lon hon hoac bang 0.'); // Them toast
         return;
       }
       if (this.newProductDetail.brand.trim() === '' || this.newProductDetail.type.trim() === '' ||
           this.newProductDetail.color.trim() === '' || this.newProductDetail.material.trim() === '' ||
           this.newProductDetail.size.trim() === '') {
-          alert('Vui long dien day du thong tin chi tiet (Hang, Loai giay, Mau sac, Chat lieu, Kich co).');
+          this.toast.error('Vui long dien day du thong tin chi tiet (Hang, Loai giay, Mau sac, Chat lieu, Kich co).'); // Them toast
           return;
       }
 
@@ -407,6 +417,7 @@ export default {
       this.saveProducts();
       this.refreshList(); // Tai lai danh sach de ap dung bo loc/sap xep
       this.closeAddProductDetailModal();
+      this.toast.success('Them chi tiet san pham thanh cong!'); // Them toast
     },
     closeAddProductDetailModal() {
         this.showAddProductDetailModal = false;
@@ -421,6 +432,7 @@ export default {
     },
     toggleStatus(index, event) {
       const product = this.paginatedProducts[index]; // Lay san pham tu trang hien tai
+      const oldActiveStatus = product.active; // Luu trang thai cu de thong bao chinh xac
       product.active = event.target.checked;
 
       // Tim va cap nhat san pham trong originalProducts
@@ -429,6 +441,15 @@ export default {
         this.originalProducts[originalIndex] = { ...product };
       }
       this.saveProducts();
+
+      // Them toast voi thong bao cu the
+      if (oldActiveStatus !== product.active) {
+        if (product.active) {
+          this.toast.success(`Chi tiet san pham "${product.name} - ${product.color} - ${product.size}" da duoc chuyen sang trang thai "Dang ban".`);
+        } else {
+          this.toast.warning(`Chi tiet san pham "${product.name} - ${product.color} - ${product.size}" da duoc chuyen sang trang thai "Het hang".`);
+        }
+      }
     },
     openEditProductDetailModal(index) {
       this.editingProductDetailIndex = index; // Luu index cua san pham tren trang hien tai
@@ -437,6 +458,17 @@ export default {
     },
     saveEditedProductDetail() {
       if (this.editingProductDetailIndex !== -1) {
+        if (this.editingProductDetail.quantity < 0 || this.editingProductDetail.price < 0) {
+          this.toast.error('So luong va gia phai lon hon hoac bang 0.'); // Them toast
+          return;
+        }
+        if (this.editingProductDetail.brand.trim() === '' || this.editingProductDetail.type.trim() === '' ||
+            this.editingProductDetail.color.trim() === '' || this.editingProductDetail.material.trim() === '' ||
+            this.editingProductDetail.size.trim() === '') {
+            this.toast.error('Vui long dien day du thong tin chi tiet (Hang, Loai giay, Mau sac, Chat lieu, Kich co).'); // Them toast
+            return;
+        }
+
         const productInPaginated = this.paginatedProducts[this.editingProductDetailIndex];
 
         // Cap nhat cac thuoc tinh chi tiet tu editingProductDetail
@@ -458,13 +490,14 @@ export default {
         this.editingProductDetailIndex = -1;
         this.editingProductDetail = {};
         this.refreshList(); // Cap nhat lai danh sach hien thi
+        this.toast.success('Cap nhat chi tiet san pham thanh cong!'); // Them toast
       } else {
-        alert('Co loi xay ra khi luu san pham chi tiet.');
+        this.toast.error('Co loi xay ra khi luu san pham chi tiet.'); // Them toast
       }
     },
     deleteProductDetail(index) {
       const productToDelete = this.paginatedProducts[index];
-      if (confirm(`Ban co chac muon xoa chi tiet san pham: ${productToDelete.name} - ${productToDelete.color} - ${productToDelete.size}?`)) {
+      if (confirm(`Ban co chac muon xoa chi tiet san pham: ${productToDelete.name} - ${productToDelete.color} - ${productToDelete.size}?`)) { // Thay alert bang confirm de nguoi dung xac nhan
         // Xoa khoi originalProducts
         const originalIndex = this.originalProducts.findIndex(p => p.id === productToDelete.id);
         if (originalIndex !== -1) {
@@ -472,6 +505,7 @@ export default {
         }
         this.saveProducts(); // Luu lai vao localStorage
         this.refreshList(); // Cap nhat lai danh sach hien thi
+        this.toast.warning(`Chi tiet san pham "${productToDelete.name} - ${productToDelete.color} - ${productToDelete.size}" da bi xoa.`); // Them toast
       }
     },
     refreshList() {
@@ -486,6 +520,7 @@ export default {
       this.sortOrder = '';
       this.currentPage = 1;
       this.filterAndSortProducts(); // Ap dung lai cac filter/sort (hien tai la reset)
+      this.toast.info('Danh sach chi tiet san pham da duoc lam moi.'); // Them toast
     },
     changePage(page) {
       if (page >= 1 && page <= this.totalPages) {
@@ -509,6 +544,7 @@ export default {
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, 'ChiTietSanPham');
       XLSX.writeFile(workbook, 'ChiTietSanPham.xlsx');
+      this.toast.success('Xuat file Excel thanh cong!'); // Them toast
     }
   },
   icons: {

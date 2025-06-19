@@ -57,8 +57,13 @@
           <tr v-for="(coupon, index) in paginatedCoupons" :key="coupon.code">
             <td class="text-center">{{ index + 1 + (currentPage - 1) * pageSize }}</td>
             <td class="text-center">{{ coupon.code }}</td>
-            <td class="text-center">{{ coupon.name }}</td> <td class="text-end">{{ coupon.quantity }}</td>
-            <td class="text-center">{{ coupon.type }}</td>
+            <td class="text-center">{{ coupon.name }}</td>
+            <td class="text-end">{{ coupon.quantity }}</td>
+            <td class="text-center">
+              <span :style="{ backgroundColor: coupon.type === 'Công khai' ? '#000000' : '#8B0000', color: '#FFFFFF', padding: '0.3rem 0.6rem', borderRadius: '0.25rem', fontSize: '0.85em' }">
+                {{ coupon.type }}
+              </span>
+            </td>
             <td class="text-center">{{ coupon.discountType }}</td>
             <td class="text-end">{{ formatCurrency(coupon.discountValue, coupon.discountType) }}</td>
             <td class="text-end">{{ formatCurrency(coupon.minOrderValue, 'Số tiền cố định') }}</td>
@@ -159,12 +164,12 @@
         <p><strong>Ngay ket thuc:</strong> {{ formatDate(viewingCoupon.endDate) }}</p>
         <p><strong>Trang thai:</strong> {{ viewingCoupon.active ? 'Hoat dong' : 'Khong hoat dong' }}</p>
         <div v-if="viewingCoupon.type === 'Riêng tư' && viewingCoupon.customerIds && viewingCoupon.customerIds.length > 0">
-            <h6 class="mt-3 fw-bold">Khách hàng áp dụng:</h6>
-            <ul>
-                <li v-for="custId in viewingCoupon.customerIds" :key="custId">
-                    {{ getCustomerNameById(custId) }} (ID: {{ custId }})
-                </li>
-            </ul>
+          <h6 class="mt-3 fw-bold">Khách hàng áp dụng:</h6>
+          <ul>
+            <li v-for="custId in viewingCoupon.customerIds" :key="custId">
+              {{ getCustomerNameById(custId) }} (ID: {{ custId }})
+            </li>
+          </ul>
         </div>
       </CModalBody>
       <CModalFooter>
@@ -178,30 +183,28 @@
 import { CIcon } from '@coreui/icons-vue';
 import * as icon from '@coreui/icons';
 import { CFormSelect } from '@coreui/vue';
+import { inject } from 'vue';
 
 export default {
   components: {
     CIcon,
     CFormSelect,
   },
+  setup() {
+    const toast = inject('$toast');
+    return { toast };
+  },
   data() {
     return {
-      // Filter data
       searchQuery: '',
       filterCouponType: '',
       filterDiscountType: '',
       filterStartDate: '',
       filterEndDate: '',
-
-      // Pagination data
       currentPage: 1,
       pageSize: 10,
-
-      // Coupon data
-      originalCoupons: [], // Full list of coupons
-      coupons: [], // Filtered/searched list of coupons
-
-      // Edit Coupon Modal data
+      originalCoupons: [],
+      coupons: [],
       showEditCouponModal: false,
       editingCouponCode: '',
       editingCouponName: '',
@@ -214,13 +217,9 @@ export default {
       editingStartDate: '',
       editingEndDate: '',
       editingCouponIndex: -1,
-
-      // View Details Modal data
       showViewDetailsModal: false,
       viewingCoupon: null,
-      allCustomers: [], // Để tra cứu tên khách hàng khi xem chi tiết
-
-      // Dropdown options
+      allCustomers: [],
       couponTypes: ['Công khai', 'Riêng tư'],
       discountTypes: ['Phần trăm', 'Số tiền cố định'],
     };
@@ -236,7 +235,7 @@ export default {
   },
   created() {
     this.loadCoupons();
-    this.loadAllCustomers(); // Tải tất cả khách hàng để phục vụ tra cứu
+    this.loadAllCustomers();
   },
   methods: {
     loadCoupons() {
@@ -244,204 +243,52 @@ export default {
       if (storedCoupons) {
         this.originalCoupons = JSON.parse(storedCoupons);
       } else {
-        // Initial dummy data
         this.originalCoupons = [
-          {
-            code: 'SALE2024',
-            name: 'Giảm 10% cho mọi đơn hàng',
-            quantity: 150,
-            type: 'Công khai',
-            discountType: 'Phần trăm',
-            discountValue: 10,
-            minOrderValue: 100000,
-            maxDiscountValue: 50000,
-            startDate: '2025-06-01T09:00', // Added time
-            endDate: '2025-06-30T23:59', // Added time
-            active: true
-          },
-          {
-            code: 'FREESHIP',
-            name: 'Miễn phí vận chuyển',
-            quantity: 50,
-            type: 'Công khai',
-            discountType: 'Số tiền cố định',
-            discountValue: 25000,
-            minOrderValue: 0,
-            maxDiscountValue: 25000,
-            startDate: '2025-06-10T00:00', // Added time
-            endDate: '2025-07-10T23:59', // Added time
-            active: true
-          },
-          {
-            code: 'VIPDISC',
-            name: 'Ưu đãi dành cho khách hàng VIP',
-            quantity: 20,
-            type: 'Riêng tư',
-            discountType: 'Phần trăm',
-            discountValue: 15,
-            minOrderValue: 500000,
-            maxDiscountValue: 100000,
-            startDate: '2025-05-15T10:30', // Added time
-            endDate: '2025-08-15T18:00', // Added time
-            active: true,
-            customerIds: ['KH001', 'KH005', 'KH007'] // Thêm trường customerIds
-          },
-          {
-            code: 'HAPPYBIRTHDAY',
-            name: 'Giảm giá sinh nhật',
-            quantity: 0, // Hết hàng
-            type: 'Riêng tư',
-            discountType: 'Số tiền cố định',
-            discountValue: 30000,
-            minOrderValue: 0,
-            maxDiscountValue: 30000,
-            startDate: '2025-01-01T00:00', // Added time
-            endDate: '2025-12-31T23:59', // Added time
-            active: false,
-            customerIds: ['KH002']
-          },
-          {
-            code: 'SUMMERSALE',
-            name: 'Giảm 20% cho mùa hè',
-            quantity: 200,
-            type: 'Công khai',
-            discountType: 'Phần trăm',
-            discountValue: 20,
-            minOrderValue: 300000,
-            maxDiscountValue: 70000,
-            startDate: '2025-07-01T09:00',
-            endDate: '2025-08-31T23:59',
-            active: true
-          },
-          {
-            code: 'NEWYEAR25',
-            name: 'Ưu đãi chào năm mới',
-            quantity: 80,
-            type: 'Công khai',
-            discountType: 'Số tiền cố định',
-            discountValue: 50000,
-            minOrderValue: 250000,
-            maxDiscountValue: 50000,
-            startDate: '2025-01-01T00:00',
-            endDate: '2025-01-31T23:59',
-            active: false
-          },
-          {
-            code: 'OCTOBERFEST',
-            name: 'Khuyến mãi tháng 10',
-            quantity: 75,
-            type: 'Công khai',
-            discountType: 'Phần trăm',
-            discountValue: 8,
-            minOrderValue: 100000,
-            maxDiscountValue: 30000,
-            startDate: '2025-10-01T09:00',
-            endDate: '2025-10-31T23:59',
-            active: true
-          },
-          {
-            code: 'STUDENTPERK',
-            name: 'Giảm giá cho sinh viên',
-            quantity: 40,
-            type: 'Riêng tư',
-            discountType: 'Phần trăm',
-            discountValue: 12,
-            minOrderValue: 150000,
-            maxDiscountValue: 40000,
-            startDate: '2025-09-01T08:00',
-            endDate: '2025-12-31T23:59',
-            active: true,
-            customerIds: ['KH004', 'KH008']
-          },
-          {
-            code: 'SPRINGDEAL',
-            name: 'Ưu đãi mùa xuân',
-            quantity: 110,
-            type: 'Công khai',
-            discountType: 'Số tiền cố định',
-            discountValue: 15000,
-            minOrderValue: 80000,
-            maxDiscountValue: 15000,
-            startDate: '2025-03-01T09:00',
-            endDate: '2025-04-30T23:59',
-            active: true
-          },
-          {
-            code: 'GAMERDISC',
-            name: 'Mã giảm giá cho game thủ',
-            quantity: 60,
-            type: 'Riêng tư',
-            discountType: 'Phần trăm',
-            discountValue: 7,
-            minOrderValue: 200000,
-            maxDiscountValue: 25000,
-            startDate: '2025-06-01T10:00',
-            endDate: '2025-07-31T23:59',
-            active: true,
-            customerIds: ['KH009', 'KH012', 'KH011']
-          },
-          {
-            code: 'FIRSTORDER',
-            name: 'Chào mừng đơn hàng đầu tiên',
-            quantity: 300,
-            type: 'Công khai',
-            discountType: 'Số tiền cố định',
-            discountValue: 20000,
-            minOrderValue: 50000,
-            maxDiscountValue: 20000,
-            startDate: '2025-01-01T00:00',
-            endDate: '2025-12-31T23:59',
-            active: true
-          },
-          {
-            code: 'BANKPROMO',
-            name: 'Ưu đãi từ ngân hàng ABC',
-            quantity: 90,
-            type: 'Riêng tư',
-            discountType: 'Phần trăm',
-            discountValue: 10,
-            minOrderValue: 400000,
-            maxDiscountValue: 60000,
-            startDate: '2025-06-15T11:00',
-            endDate: '2025-09-15T23:59',
-            active: true,
-            customerIds: ['KH010', 'KH013', 'KH015']
-          },
+          { code: 'SALE2024', name: 'Giảm 10% cho mọi đơn hàng', quantity: 150, type: 'Công khai', discountType: 'Phần trăm', discountValue: 10, minOrderValue: 100000, maxDiscountValue: 50000, startDate: '2025-06-01T09:00', endDate: '2025-06-30T23:59', active: true },
+          { code: 'FREESHIP', name: 'Miễn phí vận chuyển', quantity: 50, type: 'Công khai', discountType: 'Số tiền cố định', discountValue: 25000, minOrderValue: 0, maxDiscountValue: 25000, startDate: '2025-06-10T00:00', endDate: '2025-07-10T23:59', active: true },
+          { code: 'VIPDISC', name: 'Ưu đãi dành cho khách hàng VIP', quantity: 20, type: 'Riêng tư', discountType: 'Phần trăm', discountValue: 15, minOrderValue: 500000, maxDiscountValue: 100000, startDate: '2025-05-15T10:30', endDate: '2025-08-15T18:00', active: true, customerIds: ['KH001', 'KH005', 'KH007'] },
+          { code: 'HAPPYBIRTHDAY', name: 'Giảm giá sinh nhật', quantity: 0, type: 'Riêng tư', discountType: 'Số tiền cố định', discountValue: 30000, minOrderValue: 0, maxDiscountValue: 30000, startDate: '2025-01-01T00:00', endDate: '2025-12-31T23:59', active: false, customerIds: ['KH002'] },
+          { code: 'SUMMERSALE', name: 'Giảm 20% cho mùa hè', quantity: 200, type: 'Công khai', discountType: 'Phần trăm', discountValue: 20, minOrderValue: 300000, maxDiscountValue: 70000, startDate: '2025-07-01T09:00', endDate: '2025-08-31T23:59', active: true },
+          { code: 'NEWYEAR25', name: 'Ưu đãi chào năm mới', quantity: 80, type: 'Công khai', discountType: 'Số tiền cố định', discountValue: 50000, minOrderValue: 250000, maxDiscountValue: 50000, startDate: '2025-01-01T00:00', endDate: '2025-01-31T23:59', active: false },
+          { code: 'OCTOBERFEST', name: 'Khuyến mãi tháng 10', quantity: 75, type: 'Công khai', discountType: 'Phần trăm', discountValue: 8, minOrderValue: 100000, maxDiscountValue: 30000, startDate: '2025-10-01T09:00', endDate: '2025-10-31T23:59', active: true },
+          { code: 'STUDENTPERK', name: 'Giảm giá cho sinh viên', quantity: 40, type: 'Riêng tư', discountType: 'Phần trăm', discountValue: 12, minOrderValue: 150000, maxDiscountValue: 40000, startDate: '2025-09-01T08:00', endDate: '2025-12-31T23:59', active: true, customerIds: ['KH004', 'KH008'] },
+          { code: 'SPRINGDEAL', name: 'Ưu đãi mùa xuân', quantity: 110, type: 'Công khai', discountType: 'Số tiền cố định', discountValue: 15000, minOrderValue: 80000, maxDiscountValue: 15000, startDate: '2025-03-01T09:00', endDate: '2025-04-30T23:59', active: true },
+          { code: 'GAMERDISC', name: 'Mã giảm giá cho game thủ', quantity: 60, type: 'Riêng tư', discountType: 'Phần trăm', discountValue: 7, minOrderValue: 200000, maxDiscountValue: 25000, startDate: '2025-06-01T10:00', endDate: '2025-07-31T23:59', active: true, customerIds: ['KH009', 'KH012', 'KH011'] },
+          { code: 'FIRSTORDER', name: 'Chào mừng đơn hàng đầu tiên', quantity: 300, type: 'Công khai', discountType: 'Số tiền cố định', discountValue: 20000, minOrderValue: 50000, maxDiscountValue: 20000, startDate: '2025-01-01T00:00', endDate: '2025-12-31T23:59', active: true },
+          { code: 'BANKPROMO', name: 'Ưu đãi từ ngân hàng ABC', quantity: 90, type: 'Riêng tư', discountType: 'Phần trăm', discountValue: 10, minOrderValue: 400000, maxDiscountValue: 60000, startDate: '2025-06-15T11:00', endDate: '2025-09-15T23:59', active: true, customerIds: ['KH010', 'KH013', 'KH015'] },
         ];
         localStorage.setItem('couponsData', JSON.stringify(this.originalCoupons));
       }
-      this.filterAndSearchCoupons(); // Apply filters on load
+      this.filterAndSearchCoupons();
     },
     loadAllCustomers() {
-        // Tải tất cả khách hàng (từ nguồn dữ liệu của bạn, ví dụ API hoặc localStorage)
-        // Hiện tại dùng dữ liệu giả định giống trong AddCouponPage
-        const storedCustomers = localStorage.getItem('customersData');
-        if (storedCustomers) {
-            this.allCustomers = JSON.parse(storedCustomers);
-        } else {
-            this.allCustomers = [
-                { id: 'KH001', name: 'Nguyễn Văn A', cccd: '001122334455', email: 'vana@example.com', phone: '0901234567', dob: '1990-05-10', status: 'Hoạt động' },
-                { id: 'KH002', name: 'Trần Thị B', cccd: '002233445566', email: 'thib@example.com', phone: '0902345678', dob: '1995-11-20', status: 'Hoạt động' },
-                { id: 'KH003', name: 'Lê Văn C', cccd: '003344556677', email: 'vanc@example.com', phone: '0903456789', dob: '1988-01-15', status: 'Không hoạt động' },
-                { id: 'KH004', name: 'Phạm Thị D', cccd: '004455667788', email: 'thid@example.com', phone: '0904567890', dob: '2000-07-01', status: 'Hoạt động' },
-                { id: 'KH005', name: 'Hoàng Văn E', cccd: '005566778899', email: 'vane@example.com', phone: '0905678901', dob: '1975-03-25', status: 'Hoạt động' },
-                { id: 'KH006', name: 'Đặng Thị F', cccd: '006677889900', email: 'thif@example.com', phone: '0906789012', dob: '1992-09-05', status: 'Hoạt động' },
-                { id: 'KH007', name: 'Bùi Văn G', cccd: '007788990011', email: 'vang@example.com', phone: '0907890123', dob: '1980-04-30', status: 'Hoạt động' },
-                { id: 'KH008', name: 'Ngô Thị H', cccd: '008899001122', email: 'thih@example.com', phone: '0908901234', dob: '2002-12-12', status: 'Không hoạt động' },
-                { id: 'KH009', name: 'Chu Văn I', cccd: '009900112233', email: 'vani@example.com', phone: '0909012345', dob: '1998-02-28', status: 'Hoạt động' },
-                { id: 'KH010', name: 'Võ Thị K', cccd: '010011223344', email: 'thik@example.com', phone: '0910123456', dob: '1985-06-18', status: 'Hoạt động' },
-                { id: 'KH011', name: 'Đỗ Văn L', cccd: '011122334455', email: 'vanl@example.com', phone: '0911234567', dob: '1993-08-08', status: 'Hoạt động' },
-                { id: 'KH012', name: 'Trịnh Thị M', cccd: '012233445566', email: 'thim@example.com', phone: '0912345678', dob: '1997-01-22', status: 'Hoạt động' },
-                { id: 'KH013', name: 'Mai Văn N', cccd: '013344556677', email: 'vann@example.com', phone: '0913456789', dob: '1982-10-03', status: 'Hoạt động' },
-                { id: 'KH014', name: 'Dương Thị O', cccd: '014455667788', email: 'thio@example.com', phone: '0914567890', dob: '2005-04-14', status: 'Không hoạt động' },
-                { id: 'KH015', name: 'Nguyễn Văn P', cccd: '015566778899', email: 'vanp@example.com', phone: '0915678901', dob: '1970-12-01', status: 'Hoạt động' },
-            ];
-            localStorage.setItem('customersData', JSON.stringify(this.allCustomers));
-        }
+      const storedCustomers = localStorage.getItem('customersData');
+      if (storedCustomers) {
+        this.allCustomers = JSON.parse(storedCustomers);
+      } else {
+        this.allCustomers = [
+          { id: 'KH001', name: 'Nguyễn Văn A', cccd: '001122334455', email: 'vana@example.com', phone: '0901234567', dob: '1990-05-10', status: 'Hoạt động' },
+          { id: 'KH002', name: 'Trần Thị B', cccd: '002233445566', email: 'thib@example.com', phone: '0902345678', dob: '1995-11-20', status: 'Hoạt động' },
+          { id: 'KH003', name: 'Lê Văn C', cccd: '003344556677', email: 'vanc@example.com', phone: '0903456789', dob: '1988-01-15', status: 'Không hoạt động' },
+          { id: 'KH004', name: 'Phạm Thị D', cccd: '004455667788', email: 'thid@example.com', phone: '0904567890', dob: '2000-07-01', status: 'Hoạt động' },
+          { id: 'KH005', name: 'Hoàng Văn E', cccd: '005566778899', email: 'vane@example.com', phone: '0905678901', dob: '1975-03-25', status: 'Hoạt động' },
+          { id: 'KH006', name: 'Đặng Thị F', cccd: '006677889900', email: 'thif@example.com', phone: '0906789012', dob: '1992-09-05', status: 'Hoạt động' },
+          { id: 'KH007', name: 'Bùi Văn G', cccd: '007788990011', email: 'vang@example.com', phone: '0907890123', dob: '1980-04-30', status: 'Hoạt động' },
+          { id: 'KH008', name: 'Ngô Thị H', cccd: '008899001122', email: 'thih@example.com', phone: '0908901234', dob: '2002-12-12', status: 'Không hoạt động' },
+          { id: 'KH009', name: 'Chu Văn I', cccd: '009900112233', email: 'vani@example.com', phone: '0909012345', dob: '1998-02-28', status: 'Hoạt động' },
+          { id: 'KH010', name: 'Võ Thị K', cccd: '010011223344', email: 'thik@example.com', phone: '0910123456', dob: '1985-06-18', status: 'Hoạt động' },
+          { id: 'KH011', name: 'Đỗ Văn L', cccd: '011122334455', email: 'vanl@example.com', phone: '0911234567', dob: '1993-08-08', status: 'Hoạt động' },
+          { id: 'KH012', name: 'Trịnh Thị M', cccd: '012233445566', email: 'thim@example.com', phone: '0912345678', dob: '1997-01-22', status: 'Hoạt động' },
+          { id: 'KH013', name: 'Mai Văn N', cccd: '013344556677', email: 'vann@example.com', phone: '0913456789', dob: '1982-10-03', status: 'Hoạt động' },
+          { id: 'KH014', name: 'Dương Thị O', cccd: '014455667788', email: 'thio@example.com', phone: '0914567890', dob: '2005-04-14', status: 'Không hoạt động' },
+          { id: 'KH015', name: 'Nguyễn Văn P', cccd: '015566778899', email: 'vanp@example.com', phone: '0915678901', dob: '1970-12-01', status: 'Hoạt động' },
+        ];
+        localStorage.setItem('customersData', JSON.stringify(this.allCustomers));
+      }
     },
     getCustomerNameById(customerId) {
-        const customer = this.allCustomers.find(c => c.id === customerId);
-        return customer ? customer.name : 'Không tìm thấy';
+      const customer = this.allCustomers.find(c => c.id === customerId);
+      return customer ? customer.name : 'Không tìm thấy';
     },
     saveCoupons() {
       localStorage.setItem('couponsData', JSON.stringify(this.originalCoupons));
@@ -449,41 +296,36 @@ export default {
     filterAndSearchCoupons() {
       let filtered = [...this.originalCoupons];
 
-      // Filter by search query (coupon name or code)
       if (this.searchQuery.trim()) {
         const query = this.searchQuery.toLowerCase();
         filtered = filtered.filter(coupon =>
           coupon.name.toLowerCase().includes(query) ||
           coupon.code.toLowerCase().includes(query)
         );
+        this.currentPage = 1;
       }
 
-      // Filter by coupon type
       if (this.filterCouponType) {
         filtered = filtered.filter(coupon => coupon.type === this.filterCouponType);
       }
 
-      // Filter by discount type
       if (this.filterDiscountType) {
         filtered = filtered.filter(coupon => coupon.discountType === this.filterDiscountType);
       }
 
-      // Filter by start date (now also considers time)
       if (this.filterStartDate) {
         filtered = filtered.filter(coupon => new Date(coupon.startDate) >= new Date(this.filterStartDate));
       }
 
-      // Filter by end date (now also considers time)
       if (this.filterEndDate) {
         filtered = filtered.filter(coupon => new Date(coupon.endDate) <= new Date(this.filterEndDate));
       }
 
       this.coupons = filtered;
-      this.currentPage = 1; // Reset to first page after filtering
+      this.currentPage = 1;
     },
-    // PHƯƠNG THỨC ĐIỀU HƯỚNG MỚI
     navigateToAddCouponPage() {
-        this.$router.push({ name: 'AddCouponPage' }); // Chuyển hướng đến route có tên 'AddCouponPage'
+      this.$router.push({ name: 'Them Phieu' });
     },
     openEditCouponModal(index) {
       this.editingCouponIndex = (this.currentPage - 1) * this.pageSize + index;
@@ -497,16 +339,14 @@ export default {
       this.editingDiscountValue = couponToEdit.discountValue;
       this.editingMinOrderValue = couponToEdit.minOrderValue;
       this.editingMaxDiscountValue = couponToEdit.maxDiscountValue;
-      // Ensure the date strings are in 'YYYY-MM-DDTHH:mm' format for datetime-local input
       this.editingStartDate = couponToEdit.startDate.slice(0, 16);
       this.editingEndDate = couponToEdit.endDate.slice(0, 16);
-      // Active status is handled by the toggle switch, not directly edited in modal for now
 
       this.showEditCouponModal = true;
     },
     saveEditedCoupon() {
       if (!this.editingCouponName || !this.editingCouponType || !this.editingDiscountType || this.editingCouponIndex === -1) {
-        alert('Vui lòng điền đầy đủ các trường bắt buộc (Tên, Loại phiếu, Loại giảm giá)!');
+        this.toast.error('Tên phiếu, loại phiếu, và loại giảm giá không được để trống!');
         return;
       }
 
@@ -518,20 +358,17 @@ export default {
       coupon.discountValue = parseFloat(this.editingDiscountValue) || 0;
       coupon.minOrderValue = parseFloat(this.editingMinOrderValue) || 0;
       coupon.maxDiscountValue = parseFloat(this.editingMaxDiscountValue) || 0;
-      // Ensure dates are saved with time component
       coupon.startDate = this.editingStartDate;
       coupon.endDate = this.editingEndDate;
 
-      // Find the coupon in the original list and update it
       const originalIndex = this.originalCoupons.findIndex(c => c.code === coupon.code);
       if (originalIndex !== -1) {
         this.originalCoupons[originalIndex] = { ...coupon };
       }
       this.saveCoupons();
-      this.filterAndSearchCoupons(); // Re-apply filters and reload
+      this.filterAndSearchCoupons();
       this.showEditCouponModal = false;
 
-      // Reset editing fields
       this.editingCouponCode = '';
       this.editingCouponName = '';
       this.editingCouponQuantity = 0;
@@ -543,6 +380,7 @@ export default {
       this.editingStartDate = '';
       this.editingEndDate = '';
       this.editingCouponIndex = -1;
+      this.toast.success('Cập nhật phiếu giảm giá thành công!');
     },
     viewCouponDetails(index) {
       const globalIndex = (this.currentPage - 1) * this.pageSize + index;
@@ -555,11 +393,13 @@ export default {
       this.filterDiscountType = '';
       this.filterStartDate = '';
       this.filterEndDate = '';
-      this.loadCoupons(); // Reload original data and apply empty filters
+      this.loadCoupons();
+      this.toast.info('Đã làm mới danh sách phiếu giảm giá.');
     },
     toggleStatus(index, event) {
       const globalIndex = (this.currentPage - 1) * this.pageSize + index;
       const coupon = this.coupons[globalIndex];
+      const oldActiveStatus = coupon.active;
       coupon.active = event.target.checked;
 
       const originalIndex = this.originalCoupons.findIndex(c => c.code === coupon.code);
@@ -567,21 +407,29 @@ export default {
         this.originalCoupons[originalIndex] = { ...coupon };
       }
       this.saveCoupons();
-      this.filterAndSearchCoupons(); // Re-apply filters to ensure view consistency
+      this.filterAndSearchCoupons();
+
+      if (oldActiveStatus !== coupon.active) {
+        if (coupon.active) {
+          this.toast.success(`Phiếu "${coupon.name}" đã được kích hoạt.`);
+        } else {
+          this.toast.warning(`Phiếu "${coupon.name}" đã bị vô hiệu hóa.`);
+        }
+      }
     },
     deleteCoupon(index) {
       const globalIndex = (this.currentPage - 1) * this.pageSize + index;
       const couponToDelete = this.coupons[globalIndex];
 
-      if (confirm(`Ban co chac muon chuyen trang thai phieu "${couponToDelete.name}" sang "Khong hoat dong"?`)) {
-        // Soft delete: set active to false
+      if (confirm(`Bạn có chắc muốn chuyển trạng thái phiếu "${couponToDelete.name}" sang "Không hoạt động"?`)) {
         couponToDelete.active = false;
         const originalIndex = this.originalCoupons.findIndex(c => c.code === couponToDelete.code);
         if (originalIndex !== -1) {
           this.originalCoupons[originalIndex] = { ...couponToDelete };
         }
         this.saveCoupons();
-        this.filterAndSearchCoupons(); // Re-apply filters to ensure view consistency
+        this.filterAndSearchCoupons();
+        this.toast.warning(`Phiếu "${couponToDelete.name}" đã bị vô hiệu hóa.`);
       }
     },
     changePage(page) {
@@ -592,7 +440,6 @@ export default {
     formatDate(dateString) {
       if (!dateString) return '';
       const date = new Date(dateString);
-      // Format to Vietnamese date and time string (e.g., 20/06/2025, 14:30)
       return date.toLocaleString('vi-VN', {
         day: '2-digit',
         month: '2-digit',
@@ -623,7 +470,7 @@ export default {
 h2 {
   text-align: center;
   margin-bottom: 2rem;
-  color: #000000; /* Deep red for headings */
+  color: #000000;
 }
 
 .filter-section {
@@ -645,11 +492,12 @@ h2 {
   border-radius: 0.5rem;
   border: 1px solid #ced4da;
   padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
 }
 
 .custom-input:focus,
 .custom-select:focus {
-  border-color: #8B0000; /* Deep red focus */
+  border-color: #8B0000;
   box-shadow: 0 0 0 0.25rem rgba(139, 0, 0, 0.25);
 }
 
@@ -660,15 +508,16 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 0.9rem;
 }
 
 .btn-primary {
-  background-color: #8B0000; /* Deep red */
+  background-color: #8B0000;
   border-color: #8B0000;
 }
 
 .btn-primary:hover {
-  background-color: #6a0000; /* Darker red on hover */
+  background-color: #6a0000;
   border-color: #6a0000;
 }
 
@@ -693,22 +542,23 @@ h2 {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  min-width: 1200px; /* Ensure table doesn't shrink too much */
+  min-width: 1100px;
 }
 
 .custom-table th,
 .custom-table td {
-  padding: 1rem 1.2rem;
+  padding: 0.6rem 0.8rem;
   vertical-align: middle;
   border-bottom: 1px solid #dee2e6;
+  font-size: 0.85em;
 }
 
 .custom-table th {
-  background-color: #000000; /* Dark header */
+  background-color: #000000;
   color: #FFFFFF;
   text-align: left;
   font-weight: bold;
-  white-space: nowrap; /* Prevent wrapping of headers */
+  white-space: nowrap;
 }
 
 .custom-table tbody tr:hover {
@@ -737,28 +587,29 @@ h2 {
 .status-cell span {
   font-weight: bold;
   white-space: nowrap;
+  padding: 0.2rem 0.5rem !important;
+  font-size: 0.8em !important;
 }
 
 .action-cell {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  white-space: nowrap; /* Keep action buttons on one line */
+  gap: 0.25rem;
+  white-space: nowrap;
 }
 
 .action-cell .btn {
-  padding: 0.375rem 0.75rem;
-  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
 }
 
-/* Toggle Switch Styles */
 .switch {
   position: relative;
   display: inline-block;
-  width: 40px;
-  height: 20px;
-  margin: 0 8px;
+  width: 34px;
+  height: 18px;
+  margin: 0 4px;
 }
 
 .switch input {
@@ -777,39 +628,38 @@ h2 {
   background-color: #ccc;
   -webkit-transition: .4s;
   transition: .4s;
-  border-radius: 20px; /* Make it round */
+  border-radius: 18px;
 }
 
 .slider:before {
   position: absolute;
   content: "";
-  height: 16px;
-  width: 16px;
+  height: 14px;
+  width: 14px;
   left: 2px;
   bottom: 2px;
   background-color: white;
   -webkit-transition: .4s;
   transition: .4s;
-  border-radius: 50%; /* Make it round */
+  border-radius: 50%;
 }
 
 input:checked + .slider {
-  background-color: #000000; /* Deep red when checked */
+  background-color: #000000;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #000000; /* Deep red focus */
+  box-shadow: 0 0 1px #000000;
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(20px);
-  -ms-transform: translateX(20px);
-  transform: translateX(20px);
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
 }
 
-/* Rounded sliders */
 .slider.round {
-  border-radius: 20px;
+  border-radius: 18px;
 }
 
 .slider.round:before {
@@ -817,7 +667,7 @@ input:checked + .slider:before {
 }
 
 .CModalHeader {
-  background-color: #000000; /* Deep red for modal header */
+  background-color: #000000;
   color: #FFFFFF;
 }
 
@@ -830,7 +680,8 @@ input:checked + .slider:before {
 }
 
 .CModalFooter .btn {
-  min-width: 80px;
+  min-width: 70px;
+  font-size: 0.85rem;
 }
 
 .pagination-container {
@@ -840,12 +691,14 @@ input:checked + .slider:before {
 }
 
 .page-item .page-link {
-  color: #000000; /* Black for page numbers */
+  color: #000000;
   border-color: #dee2e6;
+  font-size: 0.85rem;
+  padding: 0.375rem 0.75rem;
 }
 
 .page-item.active .page-link {
-  background-color: #8B0000; /* Deep red for active page */
+  background-color: #8B0000;
   border-color: #8B0000;
   color: #FFFFFF;
 }
@@ -859,40 +712,40 @@ input:checked + .slider:before {
   margin-right: 0.25rem;
 }
 
-/* Responsive adjustments */
 @media (max-width: 992px) {
   .custom-table th,
   .custom-table td {
-    padding: 0.4rem 0.6rem;
-    font-size: 0.8em;
+    padding: 0.3rem 0.5rem;
+    font-size: 0.75em;
   }
 
   .custom-table td.status-cell {
-    min-width: 80px;
+    min-width: 70px;
   }
   .custom-table td.action-cell {
-    min-width: 150px;
+    min-width: 120px;
   }
 
   .action-cell .btn {
-    padding: 0.2rem 0.4rem;
-    font-size: 0.75em;
-    margin-left: 0.2rem !important;
-    margin-right: 0.2rem !important;
+    padding: 0.15rem 0.3rem;
+    font-size: 0.65em;
+    margin-left: 0.1rem !important;
+    margin-right: 0.1rem !important;
   }
 
   .switch {
-    width: 36px;
-    height: 18px;
+    width: 30px;
+    height: 16px;
+    margin: 0 2px;
   }
   .slider:before {
-    height: 14px;
-    width: 14px;
+    height: 12px;
+    width: 12px;
     left: 2px;
     bottom: 2px;
   }
   input:checked + .slider:before {
-    transform: translateX(16px);
+    transform: translateX(14px);
   }
 
   .filters-and-search {
@@ -911,16 +764,66 @@ input:checked + .slider:before {
 
 @media (max-width: 768px) {
   h2 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
   }
 
   .filter-section {
-    padding: 1rem;
+    padding: 0.8rem;
+  }
+
+  .custom-input,
+  .custom-select {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
   }
 
   .btn {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.9rem;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .custom-table th,
+  .custom-table td {
+    padding: 0.25rem 0.4rem;
+    font-size: 0.7em;
+  }
+
+  .status-cell span {
+    padding: 0.15rem 0.3rem !important;
+    font-size: 0.7em !important;
+  }
+
+  .action-cell {
+    gap: 0.15rem;
+  }
+
+  .action-cell .btn {
+    padding: 0.1rem 0.2rem;
+    font-size: 0.6em;
+  }
+
+  .switch {
+    width: 26px;
+    height: 14px;
+  }
+  .slider:before {
+    height: 10px;
+    width: 10px;
+    left: 2px;
+    bottom: 2px;
+  }
+  input:checked + .slider:before {
+    transform: translateX(12px);
+  }
+
+  .CModalFooter .btn {
+    min-width: 60px;
+    font-size: 0.75rem;
+  }
+
+  .page-item .page-link {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
   }
 }
 </style>
