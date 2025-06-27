@@ -8,7 +8,7 @@
     </CInputGroup>
 
     <div class="mb-3">
-      <CButton :style="{ backgroundColor: '#8B0000', borderColor: '#8B0000', color: '#FFFFFF' }" class="me-2" @click="showAddProductModal = true">+ Them san pham</CButton>
+      <CButton :style="{ backgroundColor: '#8B0000', borderColor: '#8B0000', color: '#FFFFFF' }" class="me-2" @click="$router.push({ name: 'Them San Pham' })">+ Them san pham</CButton>
       <CButton :style="{ backgroundColor: '#000000', borderColor: '#000000', color: '#FFFFFF' }" class="me-2" @click="viewDetails">Xem chi tiet san pham</CButton>
       <CButton :style="{ backgroundColor: '#D3D3D3', borderColor: '#D3D3D3', color: '#000000' }" @click="refreshList">Lam moi</CButton>
     </div>
@@ -78,27 +78,6 @@
       </CPaginationItem>
     </CPagination>
 
-    <CModal :visible="showAddProductModal" @close="showAddProductModal = false">
-      <CModalHeader :style="{ backgroundColor: '#000000', color: '#FFFFFF' }">
-        <CModalTitle :style="{ color: '#FFFFFF' }">Them san pham moi</CModalTitle>
-        <CButtonClose @click="showAddProductModal = false" :style="{ color: '#FFFFFF' }" />
-      </CModalHeader>
-      <CModalBody>
-        <CFormInput v-model="newProductName" placeholder="Ten san pham moi" class="mb-3 custom-input" />
-        <CFormInput v-model="newProductImage" placeholder="URL anh san pham (vi du: https://example.com/image.jpg)" class="mb-3 custom-input" />
-        <CFormInput type="number" v-model="newProductQuantity" placeholder="So luong" class="mb-3 custom-input" />
-        <CFormCheck
-          id="flexCheckDefault"
-          label="Dang ban"
-          v-model="newProductActive"
-        />
-      </CModalBody>
-      <CModalFooter>
-        <CButton color="secondary" @click="showAddProductModal = false" :style="{ backgroundColor: '#D3D3D3', borderColor: '#D3D3D3', color: '#000000' }">Huy</CButton>
-        <CButton color="primary" @click="addNewProduct" :style="{ backgroundColor: '#8B0000', borderColor: '#8B0000', color: '#FFFFFF' }">Them san pham</CButton>
-      </CModalFooter>
-    </CModal>
-
     <CModal :visible="showEditProductModal" @close="showEditProductModal = false">
       <CModalHeader :style="{ backgroundColor: '#000000', color: '#FFFFFF' }">
         <CModalTitle :style="{ color: '#FFFFFF' }">Sua ten san pham</CModalTitle>
@@ -108,28 +87,27 @@
         <p>Nhap thong tin muon sua.</p>
         <CFormInput v-model="editingProductName" placeholder="Ten san pham" class="mb-3 custom-input" />
         <CFormInput v-model="editingProductImage" placeholder="URL anh san pham (vi du: https://example.com/image.jpg)" class="mb-3 custom-input" />
-        </CModalBody>
+      </CModalBody>
       <CModalFooter>
         <CButton color="secondary" @click="showEditProductModal = false" :style="{ backgroundColor: '#D3D3D3', borderColor: '#D3D3D3', color: '#000000' }">Huy</CButton>
         <CButton color="primary" @click="saveEditedProduct" :style="{ backgroundColor: '#8B0000', borderColor: '#8B0000', color: '#FFFFFF' }">Xac nhan</CButton>
       </CModalFooter>
     </CModal>
-
   </div>
 </template>
 
 <script>
 import { CIcon } from '@coreui/icons-vue';
 import * as icon from '@coreui/icons';
-import { inject } from 'vue'; // Import inject de su dung toast
+import { inject } from 'vue';
 
 export default {
   components: {
     CIcon
   },
   setup() {
-    const toast = inject('$toast'); // Inject toast vao setup
-    return { toast }; // Tra ve toast de co the su dung trong data va methods
+    const toast = inject('$toast');
+    return { toast };
   },
   data() {
     return {
@@ -138,11 +116,6 @@ export default {
       pageSize: 10,
       originalProducts: [],
       products: [],
-      showAddProductModal: false,
-      newProductName: '',
-      newProductImage: '',
-      newProductQuantity: 0,
-      newProductActive: true,
       showEditProductModal: false,
       editingProductName: '',
       editingProductImage: '',
@@ -202,50 +175,10 @@ export default {
           product.name.toLowerCase().includes(this.searchQuery.toLowerCase())
         );
         this.currentPage = 1;
-        this.toast.info(`Da tim thay ${this.products.length} san pham phu hop.`); // Them toast
+        this.toast.info(`Da tim thay ${this.products.length} san pham phu hop.`);
       } else {
         this.refreshList();
-        this.toast.info('Da lam moi danh sach san pham.'); // Them toast
-      }
-    },
-    addNewProduct() {
-      if (this.newProductName.trim()) {
-        const newProduct = {
-          image: this.newProductImage.trim() || 'https://via.placeholder.com/50',
-          name: this.newProductName.trim(),
-          quantity: parseInt(this.newProductQuantity, 10) || 0,
-          active: this.newProductActive,
-        };
-        // Them san pham moi vao dau danh sach
-        this.originalProducts.unshift(newProduct);
-        this.saveProducts();
-
-        // Dong bo du lieu sang Products-Detail.vue
-        const storedDetailProducts = JSON.parse(localStorage.getItem('productsDetailData') || '[]');
-        const newProductDetailEntry = {
-          image: newProduct.image,
-          name: newProduct.name,
-          brand: 'Chua cap nhat',
-          type: 'Chua cap nhat',
-          color: 'Chua cap nhat',
-          material: 'Chua cap nhat',
-          size: 'Chua cap nhat',
-          quantity: newProduct.quantity,
-          price: 0, // Gia mac dinh, co the can sua thu cong sau
-          active: newProduct.active,
-        };
-        storedDetailProducts.unshift(newProductDetailEntry); // Them vao dau danh sach chi tiet
-        localStorage.setItem('productsDetailData', JSON.stringify(storedDetailProducts));
-
-        this.refreshList();
-        this.showAddProductModal = false;
-        this.newProductName = '';
-        this.newProductImage = '';
-        this.newProductQuantity = 0;
-        this.newProductActive = true;
-        this.toast.success('Them san pham thanh cong!'); // Them toast
-      } else {
-        this.toast.error('Ten san pham khong duoc de trong!'); // Them toast
+        this.toast.info('Da lam moi danh sach san pham.');
       }
     },
     openEditProductModal(index) {
@@ -255,38 +188,38 @@ export default {
       this.editingProductImage = productToEdit.image;
       this.showEditProductModal = true;
     },
-    saveEditedProduct() {
-      if (this.editingProductName.trim() && this.editingProductIndex !== -1) {
-        const product = this.products[this.editingProductIndex];
-        const oldName = product.name; // Luu ten cu de tim va cap nhat trong productsDetailData
-        product.name = this.editingProductName.trim();
-        product.image = this.editingProductImage.trim() || 'https://via.placeholder.com/50';
+  saveEditedProduct() {
+  if (this.editingProductName.trim() && this.editingProductIndex !== -1) {
+    const product = this.products[this.editingProductIndex];
+    const oldName = product.name;
+    product.name = this.editingProductName.trim();
+    product.image = this.editingProductImage.trim() || 'https://via.placeholder.com/50';
 
-        const originalIndex = this.originalProducts.findIndex(p => p === product);
-        if (originalIndex !== -1) {
-          this.originalProducts[originalIndex] = { ...product };
-        }
-        this.saveProducts();
+    const originalIndex = this.originalProducts.findIndex(p => p === product);
+    if (originalIndex !== -1) {
+      this.originalProducts[originalIndex] = { ...product };
+    }
+    this.saveProducts();
 
-        // Cap nhat ten san pham trong productsDetailData neu ten cu khop
-        const storedDetailProducts = JSON.parse(localStorage.getItem('productsDetailData') || '[]');
-        const updatedDetailProducts = storedDetailProducts.map(detail => {
-          if (detail.name === oldName) {
-            return { ...detail, name: product.name, image: product.image };
-          }
-          return detail;
-        });
-        localStorage.setItem('productsDetailData', JSON.stringify(updatedDetailProducts));
-
-        this.showEditProductModal = false;
-        this.editingProductName = '';
-        this.editingProductImage = '';
-        this.editingProductIndex = -1;
-        this.toast.success('Cap nhat san pham thanh cong!'); // Them toast
-      } else {
-        this.toast.error('Ten san pham khong duoc de trong!'); // Them toast
+    // Cập nhật tên và ảnh trong productsDetailData
+    const storedDetailProducts = JSON.parse(localStorage.getItem('productsDetailData') || '[]');
+    const updatedDetailProducts = storedDetailProducts.map(detail => {
+      if (detail.productId === product.id) {
+        return { ...detail, name: product.name, image: product.image };
       }
-    },
+      return detail;
+    });
+    localStorage.setItem('productsDetailData', JSON.stringify(updatedDetailProducts));
+
+    this.showEditProductModal = false;
+    this.editingProductName = '';
+    this.editingProductImage = '';
+    this.editingProductIndex = -1;
+    this.toast.success('Cap nhat san pham thanh cong!');
+  } else {
+    this.toast.error('Ten san pham khong duoc de trong!');
+  }
+},
     viewDetails() {
       this.$router.push({ name: 'San Pham Chi Tiet' });
     },
@@ -294,12 +227,12 @@ export default {
       this.loadProducts();
       this.searchQuery = '';
       this.currentPage = 1;
-      this.toast.info('Danh sach san pham da duoc lam moi.'); // Them toast
+      this.toast.info('Danh sach san pham da duoc lam moi.');
     },
     toggleStatus(index, event) {
       const globalIndex = (this.currentPage - 1) * this.pageSize + index;
       const product = this.products[globalIndex];
-      const oldActiveStatus = product.active; // Luu trang thai cu de thong bao chinh xac
+      const oldActiveStatus = product.active;
       product.active = event.target.checked;
 
       const originalIndex = this.originalProducts.findIndex(p => p === product);
@@ -308,7 +241,6 @@ export default {
       }
       this.saveProducts();
 
-      // Cap nhat trang thai trong productsDetailData
       const storedDetailProducts = JSON.parse(localStorage.getItem('productsDetailData') || '[]');
       const updatedDetailProducts = storedDetailProducts.map(detail => {
         if (detail.name === product.name) {
@@ -318,7 +250,6 @@ export default {
       });
       localStorage.setItem('productsDetailData', JSON.stringify(updatedDetailProducts));
 
-      // Them toast voi thong bao cu the
       if (oldActiveStatus !== product.active) {
         if (product.active) {
           this.toast.success(`San pham "${product.name}" da duoc chuyen sang trang thai "Dang ban".`);
@@ -327,33 +258,33 @@ export default {
         }
       }
     },
-    deleteProduct(index) {
-      const globalIndex = (this.currentPage - 1) * this.pageSize + index;
-      const productToDelete = this.products[globalIndex];
+   deleteProduct(index) {
+  const globalIndex = (this.currentPage - 1) * this.pageSize + index;
+  const productToDelete = this.products[globalIndex];
 
-      if (confirm(`Ban co chac muon xoa mem san pham: ${productToDelete.name}?`)) {
-        // Xoa mem: dat active ve false
-        productToDelete.active = false;
-        const originalIndex = this.originalProducts.findIndex(p => p === productToDelete);
-        if (originalIndex !== -1) {
-          this.originalProducts[originalIndex] = { ...productToDelete };
-        }
-        this.saveProducts();
+  if (confirm(`Ban co chac muon xoa mem san pham: ${productToDelete.name}?`)) {
+    // Đánh dấu sản phẩm chính là không hoạt động
+    productToDelete.active = false;
+    const originalIndex = this.originalProducts.findIndex(p => p === productToDelete);
+    if (originalIndex !== -1) {
+      this.originalProducts[originalIndex] = { ...productToDelete };
+    }
 
-        // Cap nhat trang thai trong productsDetailData
-        const storedDetailProducts = JSON.parse(localStorage.getItem('productsDetailData') || '[]');
-        const updatedDetailProducts = storedDetailProducts.map(detail => {
-          if (detail.name === productToDelete.name) {
-            return { ...detail, active: false }; // Dat trang thai ve het hang
-          }
-          return detail;
-        });
-        localStorage.setItem('productsDetailData', JSON.stringify(updatedDetailProducts));
-
-        this.refreshList();
-        this.toast.warning(`San pham "${productToDelete.name}" da duoc chuyen sang trang thai het hang.`); // Them toast
+    // Cập nhật tất cả các biến thể liên quan trong productsDetailData
+    const storedDetailProducts = JSON.parse(localStorage.getItem('productsDetailData') || '[]');
+    const updatedDetailProducts = storedDetailProducts.map(detail => {
+      if (detail.productId === productToDelete.id) {
+        return { ...detail, active: false };
       }
-    },
+      return detail;
+    });
+    localStorage.setItem('productsDetailData', JSON.stringify(updatedDetailProducts));
+
+    this.saveProducts();
+    this.refreshList();
+    this.toast.warning(`San pham "${productToDelete.name}" da duoc chuyen sang trang thai het hang.`);
+  }
+},
     changePage(page) {
       if (page >= 1 && page <= this.totalPages) {
         this.currentPage = page;
@@ -367,7 +298,7 @@ export default {
 </script>
 
 <style scoped>
-/* Giu nguyen style tu Products.vue va them/sua mot so chi tiet */
+/* Keep existing styles */
 .container {
   padding: 1rem;
 }
@@ -479,8 +410,8 @@ input:checked + .slider:before {
 
 /* Custom input style */
 .custom-input .form-control:focus {
-  border-color: #ced4da !important; /* Mau xam */
-  box-shadow: 0 0 0 0.25rem rgba(108, 117, 125, 0.25) !important; /* Mau xam nhat */
+  border-color: #ced4da !important;
+  box-shadow: 0 0 0 0.25rem rgba(108, 117, 125, 0.25) !important;
 }
 
 @media (max-width: 768px) {

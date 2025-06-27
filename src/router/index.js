@@ -141,6 +141,11 @@ const routes = [
             component: () => import('@/views/products-manager/Products-Detail.vue'),
           },
           {
+            path: 'products-list/add', // This is the URL that will display in the browser
+            name: 'Them San Pham', // The name of the route for programmatic navigation
+            component: () => import('@/views/products-manager/AddProductForm.vue'), // Ensure this path is correct
+          },
+          {
             path: 'dropdowns',
             name: 'Dropdowns',
             component: () => import('@/views/products-manager/Dropdowns.vue'),
@@ -224,16 +229,16 @@ const routes = [
             name: 'Dot Giam Gia',
             component: () => import('@/views/icons/CoreUIIcons.vue'), // Consider changing this component if 'Dot Giam Gia' has a specific view.
           },
-        {
-    path: '/discount-manager/coupons',
-    name: 'Phieu Giam Gia', // Tên route cho Coupons.vue
-    component: () => import('@/views/discount-manager/Coupons.vue'),
-  },
-  {
-    path: '/discount-manager/coupons/add', // Đây là URL sẽ hiển thị trên trình duyệt
-    name: 'Them Phieu', // TÊN NÀY PHẢI CHÍNH XÁC VỚI { name: 'Them Phieu' } TRONG goToAddCouponPage()
-    component: () => import('@/views/discount-manager/AddCouponPage.vue'), // Đảm bảo đường dẫn này đúng
-  },
+          {
+            path: '/discount-manager/coupons',
+            name: 'Phieu Giam Gia', // Tên route cho Coupons.vue
+            component: () => import('@/views/discount-manager/Coupons.vue'),
+          },
+          {
+            path: '/discount-manager/coupons/add', // Đây là URL sẽ hiển thị trên trình duyệt
+            name: 'Them Phieu', // TÊN NÀY PHẢI CHÍNH XÁC VỚI { name: 'Them Phieu' } TRONG goToAddCouponPage()
+            component: () => import('@/views/discount-manager/AddCouponPage.vue'), // Đảm bảo đường dẫn này đúng
+          },
         ],
       },
       {

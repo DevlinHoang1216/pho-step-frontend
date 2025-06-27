@@ -62,9 +62,6 @@
       <CButton :style="{ backgroundColor: '#D3D3D3', borderColor: '#D3D3D3', color: '#000000' }" @click="refreshList">
         <CIcon icon="cil-loop" class="me-1" /> Lam moi
       </CButton>
-      <CButton :style="{ backgroundColor: '#8B0000', borderColor: '#8B0000', color: '#FFFFFF' }" @click="showAddProductDetailModal = true">
-        <CIcon icon="cil-plus" class="me-1" /> Them chi tiet san pham
-      </CButton>
     </div>
 
     <div class="table-container">
@@ -456,58 +453,88 @@ export default {
       this.editingProductDetail = { ...this.paginatedProducts[index] }; // Tao ban sao de chinh sua
       this.showEditProductDetailModal = true;
     },
-    saveEditedProductDetail() {
-      if (this.editingProductDetailIndex !== -1) {
-        if (this.editingProductDetail.quantity < 0 || this.editingProductDetail.price < 0) {
-          this.toast.error('So luong va gia phai lon hon hoac bang 0.'); // Them toast
-          return;
-        }
-        if (this.editingProductDetail.brand.trim() === '' || this.editingProductDetail.type.trim() === '' ||
-            this.editingProductDetail.color.trim() === '' || this.editingProductDetail.material.trim() === '' ||
-            this.editingProductDetail.size.trim() === '') {
-            this.toast.error('Vui long dien day du thong tin chi tiet (Hang, Loai giay, Mau sac, Chat lieu, Kich co).'); // Them toast
-            return;
-        }
+   saveEditedProductDetail() {
+  if (this.editingProductDetailIndex !== -1) {
+    if (this.editingProductDetail.quantity < 0 || this.editingProductDetail.price < 0) {
+      this.toast.error('So luong va gia phai lon hon hoac bang 0.');
+      return;
+    }
+    if (
+      this.editingProductDetail.brand.trim() === '' ||
+      this.editingProductDetail.type.trim() === '' ||
+      this.editingProductDetail.color.trim() === '' ||
+      this.editingProductDetail.material.trim() === '' ||
+      this.editingProductDetail.size.trim() === ''
+    ) {
+      this.toast.error('Vui long dien day du thong tin chi tiet (Hang, Loai giay, Mau sac, Chat lieu, Kich co).');
+      return;
+    }
 
-        const productInPaginated = this.paginatedProducts[this.editingProductDetailIndex];
+    const productInPaginated = this.paginatedProducts[this.editingProductDetailIndex];
 
-        // Cap nhat cac thuoc tinh chi tiet tu editingProductDetail
-        productInPaginated.brand = this.editingProductDetail.brand;
-        productInPaginated.type = this.editingProductDetail.type;
-        productInPaginated.color = this.editingProductDetail.color;
-        productInPaginated.material = this.editingProductDetail.material;
-        productInPaginated.size = this.editingProductDetail.size;
-        productInPaginated.quantity = parseInt(this.editingProductDetail.quantity, 10);
-        productInPaginated.price = parseFloat(this.editingProductDetail.price);
+    // Cập nhật các thuộc tính chi tiết từ editingProductDetail
+    productInPaginated.brand = this.editingProductDetail.brand;
+    productInPaginated.type = this.editingProductDetail.type;
+    productInPaginated.color = this.editingProductDetail.color;
+    productInPaginated.material = this.editingProductDetail.material;
+    productInPaginated.size = this.editingProductDetail.size;
+    productInPaginated.quantity = parseInt(this.editingProductDetail.quantity, 10);
+    productInPaginated.price = parseFloat(this.editingProductDetail.price);
 
-        // Tim va cap nhat trong originalProducts (quan trong de luu tru)
-        const originalIndex = this.originalProducts.findIndex(p => p.id === productInPaginated.id);
-        if (originalIndex !== -1) {
-          this.originalProducts[originalIndex] = { ...productInPaginated };
-        }
-        this.saveProducts();
-        this.showEditProductDetailModal = false;
-        this.editingProductDetailIndex = -1;
-        this.editingProductDetail = {};
-        this.refreshList(); // Cap nhat lai danh sach hien thi
-        this.toast.success('Cap nhat chi tiet san pham thanh cong!'); // Them toast
-      } else {
-        this.toast.error('Co loi xay ra khi luu san pham chi tiet.'); // Them toast
+    // Cập nhật trong originalProducts
+    const originalIndex = this.originalProducts.findIndex(p => p.id === productInPaginated.id);
+    if (originalIndex !== -1) {
+      this.originalProducts[originalIndex] = { ...productInPaginated };
+    }
+    this.saveProducts();
+
+    // Cập nhật tổng số lượng trong productsData
+    const storedProducts = JSON.parse(localStorage.getItem('productsData') || '[]');
+    const updatedProducts = storedProducts.map(product => {
+      if (product.id === productInPaginated.productId) {
+        const relatedDetails = this.originalProducts.filter(d => d.productId === product.id);
+        const totalQuantity = relatedDetails.reduce((sum, d) => sum + d.quantity, 0);
+        return { ...product, quantity: totalQuantity };
       }
-    },
-    deleteProductDetail(index) {
-      const productToDelete = this.paginatedProducts[index];
-      if (confirm(`Ban co chac muon xoa chi tiet san pham: ${productToDelete.name} - ${productToDelete.color} - ${productToDelete.size}?`)) { // Thay alert bang confirm de nguoi dung xac nhan
-        // Xoa khoi originalProducts
-        const originalIndex = this.originalProducts.findIndex(p => p.id === productToDelete.id);
-        if (originalIndex !== -1) {
-          this.originalProducts.splice(originalIndex, 1);
-        }
-        this.saveProducts(); // Luu lai vao localStorage
-        this.refreshList(); // Cap nhat lai danh sach hien thi
-        this.toast.warning(`Chi tiet san pham "${productToDelete.name} - ${productToDelete.color} - ${productToDelete.size}" da bi xoa.`); // Them toast
+      return product;
+    });
+    localStorage.setItem('productsData', JSON.stringify(updatedProducts));
+
+    this.showEditProductDetailModal = false;
+    this.editingProductDetailIndex = -1;
+    this.editingProductDetail = {};
+    this.refreshList();
+    this.toast.success('Cap nhat chi tiet san pham thanh cong!');
+  } else {
+    this.toast.error('Co loi xay ra khi luu san pham chi tiet.');
+  }
+},
+ deleteProductDetail(index) {
+  const productToDelete = this.paginatedProducts[index];
+  if (confirm(`Ban co chac muon xoa chi tiet san pham: ${productToDelete.name} - ${productToDelete.color} - ${productToDelete.size}?`)) {
+    // Xóa khỏi originalProducts
+    const originalIndex = this.originalProducts.findIndex(p => p.id === productToDelete.id);
+    if (originalIndex !== -1) {
+      this.originalProducts.splice(originalIndex, 1);
+    }
+    this.saveProducts();
+
+    // Cập nhật tổng số lượng trong productsData
+    const storedProducts = JSON.parse(localStorage.getItem('productsData') || '[]');
+    const updatedProducts = storedProducts.map(product => {
+      if (product.id === productToDelete.productId) {
+        const relatedDetails = this.originalProducts.filter(d => d.productId === product.id);
+        const totalQuantity = relatedDetails.reduce((sum, d) => sum + d.quantity, 0);
+        return { ...product, quantity: totalQuantity };
       }
-    },
+      return product;
+    });
+    localStorage.setItem('productsData', JSON.stringify(updatedProducts));
+
+    this.refreshList();
+    this.toast.warning(`Chi tiet san pham "${productToDelete.name} - ${productToDelete.color} - ${productToDelete.size}" da bi xoa.`);
+  }
+},
     refreshList() {
       this.loadProducts(); // Tai lai du lieu goc
       this.searchQuery = '';
