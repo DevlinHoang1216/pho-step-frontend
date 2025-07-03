@@ -166,19 +166,9 @@ const routes = [
             component: () => import('@/views/forms/KichCo.vue'),
           },
           {
-            path: '/forms/select',
-            name: 'Select',
-            component: () => import('@/views/forms/Select.vue'),
-          },
-          {
             path: '/thuoc-tinh/chat-lieu',
             name: 'Chất liệu',
             component: () => import('@/views/forms/ChatLieu.vue'),
-          },
-          {
-            path: '/forms/range',
-            name: 'Range',
-            component: () => import('@/views/forms/Range.vue'),
           },
           {
             path: '/thuoc-tinh/thuong-hieu',
@@ -191,14 +181,9 @@ const routes = [
             component: () => import('@/views/forms/MauSac.vue'),
           },
           {
-            path: '/forms/layout',
-            name: 'Layout',
-            component: () => import('@/views/forms/Layout.vue'),
-          },
-          {
-            path: '/forms/validation',
-            name: 'Validation',
-            component: () => import('@/views/forms/Validation.vue'),
+            path: '/thuoc-tinh/danh-muc',
+            name: 'Danh Mục',
+            component: () => import('@/views/forms/DanhMuc.vue'),
           },
         ],
       },

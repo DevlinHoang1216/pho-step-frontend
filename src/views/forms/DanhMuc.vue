@@ -1,16 +1,16 @@
 <template>
   <div>
-    <!-- Tiêu đề + nút thêm mới -->
+    <!-- Tiêu đề -->
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <h4>Kích Cỡ</h4>
+      <h4>Danh Mục</h4>
     </div>
 
-    <!-- Tìm kiếm + Nút + Thêm mới -->
+    <!-- Ô tìm kiếm + Thêm mới -->
     <CRow class="mb-3">
       <CCol md="9">
         <CFormInput
           v-model="searchQuery"
-          placeholder="Tìm kiếm kích cỡ theo tên hoặc mã..."
+          placeholder="Tìm kiếm danh mục theo tên hoặc mã..."
           @keyup.enter="handleSearch"
         />
       </CCol>
@@ -29,36 +29,34 @@
     <!-- Thông báo (Success/Error) -->
     <CAlert :color="messageType" v-if="message" class="mb-3">{{ message }}</CAlert>
 
-    <!-- Bảng hiển thị kích cỡ -->
+    <!-- Bảng danh mục -->
     <div v-if="loading" class="text-center">Đang tải dữ liệu...</div>
     <CTable striped hover responsive v-else>
       <CTableHead>
         <CTableRow>
           <CTableHeaderCell>#</CTableHeaderCell>
-          <CTableHeaderCell>Tên kích cỡ</CTableHeaderCell>
-          <CTableHeaderCell>Mã kích cỡ</CTableHeaderCell>
+          <CTableHeaderCell>Tên danh mục</CTableHeaderCell>
+          <CTableHeaderCell>Mã danh mục</CTableHeaderCell>
           <CTableHeaderCell>Ngày tạo</CTableHeaderCell>
           <CTableHeaderCell>Ngày cập nhật</CTableHeaderCell>
           <CTableHeaderCell>Thao tác</CTableHeaderCell>
         </CTableRow>
       </CTableHead>
       <CTableBody>
-        <CTableRow v-if="kichCos.length === 0">
-          <CTableDataCell colspan="6" class="text-center">Không có kích cỡ nào.</CTableDataCell>
+        <CTableRow v-if="danhMucs.length === 0">
+          <CTableDataCell colspan="6" class="text-center">Không có danh mục nào.</CTableDataCell>
         </CTableRow>
-        <CTableRow v-for="(item, index) in kichCos" :key="item.id">
+        <CTableRow v-for="(item, index) in danhMucs" :key="item.id">
           <CTableHeaderCell>{{ index + 1 }}</CTableHeaderCell>
-          <CTableDataCell>{{ item.tenKichCo }}</CTableDataCell>
-          <CTableDataCell>{{ item.maKichCo }}</CTableDataCell>
+          <CTableDataCell>{{ item.tenDanhMuc }}</CTableDataCell>
+          <CTableDataCell>{{ item.maDanhMuc }}</CTableDataCell>
           <CTableDataCell>{{ formatDate(item.ngayTao) }}</CTableDataCell>
           <CTableDataCell>{{ formatDate(item.ngayCapNhat) }}</CTableDataCell>
           <CTableDataCell>
-            <!-- Sửa -->
             <CButton size="sm" color="info" class="me-2" @click="openEditModal(item)">
               <CIcon icon="cil-pencil" />
             </CButton>
-            <!-- Xóa -->
-            <CButton size="sm" color="danger" @click="deleteKichCo(item.id)">
+            <CButton size="sm" color="danger" @click="deleteDanhMuc(item.id)">
               <CIcon icon="cil-trash" />
             </CButton>
           </CTableDataCell>
@@ -66,57 +64,57 @@
       </CTableBody>
     </CTable>
 
-    <!-- Modal Thêm Mới -->
+    <!-- Modal thêm mới -->
     <CModal :visible="visibleAddModal" @close="visibleAddModal = false">
       <CModalHeader>
-        <CModalTitle>Thêm kích cỡ mới</CModalTitle>
+        <CModalTitle>Thêm danh mục mới</CModalTitle>
       </CModalHeader>
       <CModalBody>
         <CForm>
           <CFormInput
-            v-model="newKichCo.tenKichCo"
-            label="Tên kích cỡ"
-            placeholder="Nhập tên kích cỡ"
+            v-model="newDanhMuc.tenDanhMuc"
+            label="Tên danh mục"
+            placeholder="Nhập tên danh mục"
             class="mb-3"
           />
           <CFormInput
-            v-model="newKichCo.maKichCo"
-            label="Mã kích cỡ"
-            placeholder="Nhập mã kích cỡ"
+            v-model="newDanhMuc.maDanhMuc"
+            label="Mã danh mục"
+            placeholder="Nhập mã danh mục"
             class="mb-3"
           />
         </CForm>
       </CModalBody>
       <CModalFooter>
         <CButton color="secondary" @click="visibleAddModal = false">Hủy</CButton>
-        <CButton color="primary" @click="addKichCo">Lưu</CButton>
+        <CButton color="primary" @click="addDanhMuc">Lưu</CButton>
       </CModalFooter>
     </CModal>
 
-    <!-- Modal Chỉnh Sửa -->
+    <!-- Modal chỉnh sửa -->
     <CModal :visible="visibleEditModal" @close="visibleEditModal = false">
       <CModalHeader>
-        <CModalTitle>Chỉnh sửa kích cỡ</CModalTitle>
+        <CModalTitle>Cập nhật danh mục</CModalTitle>
       </CModalHeader>
-      <CModalBody v-if="currentKichCo">
+      <CModalBody v-if="currentDanhMuc">
         <CForm>
           <CFormInput
-            v-model="currentKichCo.tenKichCo"
-            label="Tên kích cỡ"
-            placeholder="Nhập tên kích cỡ"
+            v-model="currentDanhMuc.tenDanhMuc"
+            label="Tên danh mục"
+            placeholder="Nhập tên danh mục"
             class="mb-3"
           />
           <CFormInput
-            v-model="currentKichCo.maKichCo"
-            label="Mã kích cỡ"
-            placeholder="Nhập mã kích cỡ"
+            v-model="currentDanhMuc.maDanhMuc"
+            label="Mã danh mục"
+            placeholder="Nhập mã danh mục"
             class="mb-3"
           />
         </CForm>
       </CModalBody>
       <CModalFooter>
         <CButton color="secondary" @click="visibleEditModal = false">Hủy</CButton>
-        <CButton color="primary" @click="updateKichCo">Lưu thay đổi</CButton>
+        <CButton color="primary" @click="updateDanhMuc">Cập nhật</CButton>
       </CModalFooter>
     </CModal>
   </div>
@@ -147,10 +145,10 @@ import {
 import CIcon from '@coreui/icons-vue'; // Import CIcon nếu bạn dùng icon
 
 // Base URL cho API của bạn
-const API_BASE_URL = 'http://localhost:8080/api/kichco'; // URL cho API Kích Cỡ
+const API_BASE_URL = 'http://localhost:8080/api/danhmuc'; // URL cho API Danh Mục
 
 // --- Reactive State ---
-const kichCos = ref([]); // Danh sách kích cỡ
+const danhMucs = ref([]); // Danh sách danh mục
 const loading = ref(true); // Trạng thái tải dữ liệu
 const message = ref(''); // Thông báo cho người dùng
 const messageType = ref(''); // Loại thông báo (success, danger, info, etc.)
@@ -158,18 +156,18 @@ const messageType = ref(''); // Loại thông báo (success, danger, info, etc.)
 const visibleAddModal = ref(false); // Trạng thái hiển thị modal thêm mới
 const visibleEditModal = ref(false); // Trạng thái hiển thị modal chỉnh sửa
 
-const newKichCo = ref({ // Dữ liệu cho kích cỡ mới
-  tenKichCo: '',
-  maKichCo: '',
+const newDanhMuc = ref({ // Dữ liệu cho danh mục mới
+  tenDanhMuc: '',
+  maDanhMuc: '',
 });
 
-const currentKichCo = ref(null); // Dữ liệu kích cỡ đang được chỉnh sửa
+const currentDanhMuc = ref(null); // Dữ liệu danh mục đang được chỉnh sửa
 
 const searchQuery = ref(''); // Dữ liệu cho ô tìm kiếm
 
 // --- Lifecycle Hook ---
 onMounted(() => {
-  fetchKichCos(); // Tải dữ liệu khi component được mount
+  fetchDanhMucs(); // Tải dữ liệu khi component được mount
 });
 
 // --- Methods ---
@@ -191,100 +189,94 @@ const formatDate = (dateString) => {
   return date.toLocaleDateString('vi-VN'); // Định dạng theo ngôn ngữ Việt Nam
 };
 
-// Lấy danh sách kích cỡ từ API
-const fetchKichCos = async () => {
+// Lấy danh sách danh mục từ API
+const fetchDanhMucs = async () => {
   loading.value = true;
   try {
     const response = await axios.get(API_BASE_URL);
-    kichCos.value = response.data;
+    danhMucs.value = response.data;
   } catch (error) {
-    console.error('Lỗi khi tải danh sách kích cỡ:', error);
-    showMessage('Không thể tải dữ liệu kích cỡ. Vui lòng thử lại.', 'danger');
+    console.error('Lỗi khi tải danh sách danh mục:', error);
+    showMessage('Không thể tải dữ liệu danh mục. Vui lòng thử lại.', 'danger');
   } finally {
     loading.value = false;
   }
 };
 
-// Hàm mở modal thêm mới
-const openAddModal = () => {
-  newKichCo.value = { tenKichCo: '', maKichCo: '' }; // Reset form
-  visibleAddModal.value = true; // Hiển thị modal
-};
-
-// Thêm kích cỡ mới
-const addKichCo = async () => {
-  if (!newKichCo.value.tenKichCo || !newKichCo.value.maKichCo) {
-    showMessage('Vui lòng điền đầy đủ tên và mã kích cỡ.', 'warning');
+// Thêm danh mục mới
+const addDanhMuc = async () => {
+  if (!newDanhMuc.value.tenDanhMuc || !newDanhMuc.value.maDanhMuc) {
+    showMessage('Vui lòng điền đầy đủ tên và mã danh mục.', 'warning');
     return;
   }
 
   try {
-    const response = await axios.post(API_BASE_URL, newKichCo.value);
-    kichCos.value.push(response.data); // Thêm kích cỡ mới vào danh sách
-    showMessage('Thêm kích cỡ thành công!', 'success');
-    newKichCo.value = { tenKichCo: '', maKichCo: '' }; // Reset form
+    const response = await axios.post(API_BASE_URL, newDanhMuc.value);
+    danhMucs.value.push(response.data); // Thêm danh mục mới vào danh sách
+    showMessage('Thêm danh mục thành công!', 'success');
+    newDanhMuc.value = { tenDanhMuc: '', maDanhMuc: '' }; // Reset form
     visibleAddModal.value = false; // Đóng modal
   } catch (error) {
-    console.error('Lỗi khi thêm kích cỡ:', error);
+    console.error('Lỗi khi thêm danh mục:', error);
     if (error.response && error.response.status === 400) {
-      showMessage('Mã kích cỡ đã tồn tại hoặc dữ liệu không hợp lệ.', 'danger');
+      showMessage('Mã danh mục đã tồn tại hoặc dữ liệu không hợp lệ.', 'danger');
     } else {
-      showMessage('Thêm kích cỡ thất bại. Vui lòng thử lại.', 'danger');
+      showMessage('Thêm danh mục thất bại. Vui lòng thử lại.', 'danger');
     }
   }
 };
 
 // Mở modal chỉnh sửa và gán dữ liệu
 const openEditModal = (item) => {
-  currentKichCo.value = { ...item }; // Tạo bản sao để tránh sửa trực tiếp trên dữ liệu gốc
+  currentDanhMuc.value = { ...item }; // Tạo bản sao để tránh sửa trực tiếp trên dữ liệu gốc
   visibleEditModal.value = true;
 };
 
-// Cập nhật kích cỡ
-const updateKichCo = async () => {
-  if (!currentKichCo.value.tenKichCo || !currentKichCo.value.maKichCo) {
-    showMessage('Vui lòng điền đầy đủ tên và mã kích cỡ.', 'warning');
+// Cập nhật danh mục
+const updateDanhMuc = async () => {
+  if (!currentDanhMuc.value.tenDanhMuc || !currentDanhMuc.value.maDanhMuc) {
+    showMessage('Vui lòng điền đầy đủ tên và mã danh mục.', 'warning');
     return;
   }
 
   try {
-    const response = await axios.put(`${API_BASE_URL}/${currentKichCo.value.id}`, currentKichCo.value);
-    // Cập nhật kích cỡ trong danh sách hiện tại
-    const index = kichCos.value.findIndex(kc => kc.id === response.data.id);
+    const response = await axios.put(`${API_BASE_URL}/${currentDanhMuc.value.id}`, currentDanhMuc.value);
+    // Cập nhật danh mục trong danh sách hiện tại
+    const index = danhMucs.value.findIndex(dm => dm.id === response.data.id);
     if (index !== -1) {
-      kichCos.value[index] = response.data;
+      danhMucs.value[index] = response.data;
     }
-    showMessage('Cập nhật kích cỡ thành công!', 'success');
+    showMessage('Cập nhật danh mục thành công!', 'success');
     visibleEditModal.value = false; // Đóng modal
-    currentKichCo.value = null; // Reset
+    currentDanhMuc.value = null; // Reset
   } catch (error) {
-    console.error('Lỗi khi cập nhật kích cỡ:', error);
+    console.error('Lỗi khi cập nhật danh mục:', error);
     if (error.response && error.response.status === 400) {
-      showMessage('Mã kích cỡ đã tồn tại hoặc dữ liệu không hợp lệ.', 'danger');
+      showMessage('Mã danh mục đã tồn tại hoặc dữ liệu không hợp lệ.', 'danger');
     } else if (error.response && error.response.status === 404) {
-      showMessage('Không tìm thấy kích cỡ để cập nhật.', 'danger');
+      showMessage('Không tìm thấy danh mục để cập nhật.', 'danger');
     } else {
-      showMessage('Cập nhật kích cỡ thất bại. Vui lòng thử lại.', 'danger');
+      showMessage('Cập nhật danh mục thất bại. Vui lòng thử lại.', 'danger');
     }
   }
 };
 
-// Xóa kích cỡ
-const deleteKichCo = async (id) => {
-  if (!confirm('Bạn có chắc chắn muốn xóa kích cỡ này không?')) {
+// Xóa danh mục
+const deleteDanhMuc = async (id) => {
+  if (!confirm('Bạn có chắc chắn muốn xóa danh mục này không?')) {
     return;
   }
 
   try {
     await axios.delete(`${API_BASE_URL}/${id}`);
-    kichCos.value = kichCos.value.filter(kc => kc.id !== id); // Xóa khỏi danh sách
-    showMessage('Xóa kích cỡ thành công!', 'success');
+    danhMucs.value = danhMucs.value.filter(dm => dm.id !== id); // Xóa khỏi danh sách
+    showMessage('Xóa danh mục thành công!', 'success');
   } catch (error) {
-    console.error('Lỗi khi xóa kích cỡ:', error);
+    console.error('Lỗi khi xóa danh mục:', error);
     if (error.response && error.response.status === 404) {
-      showMessage('Không tìm thấy kích cỡ để xóa.', 'danger');
+      showMessage('Không tìm thấy danh mục để xóa.', 'danger');
     } else {
-      showMessage('Xóa kích cỡ thất bại. Vui lòng thử lại.', 'danger');
+      showMessage('Xóa danh mục thất bại. Vui lòng thử lại.', 'danger');
     }
   }
 };
@@ -304,15 +296,15 @@ const handleSearch = async () => {
           response = await axios.get(`${API_BASE_URL}/search?ma=${searchQuery.value}`);
       }
     }
-    kichCos.value = response.data;
-    if (kichCos.value.length === 0 && searchQuery.value.trim() !== '') {
+    danhMucs.value = response.data;
+    if (danhMucs.value.length === 0 && searchQuery.value.trim() !== '') {
         showMessage('Không tìm thấy kết quả nào cho tìm kiếm của bạn.', 'info');
     } else if (searchQuery.value.trim() !== '') {
         showMessage('Tìm kiếm thành công!', 'success');
     }
   } catch (error) {
-    console.error('Lỗi khi tìm kiếm kích cỡ:', error);
-    showMessage('Lỗi khi tìm kiếm kích cỡ. Vui lòng thử lại.', 'danger');
+    console.error('Lỗi khi tìm kiếm danh mục:', error);
+    showMessage('Lỗi khi tìm kiếm danh mục. Vui lòng thử lại.', 'danger');
   } finally {
     loading.value = false;
   }

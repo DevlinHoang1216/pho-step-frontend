@@ -148,18 +148,13 @@ export default [
       },
       {
         component: 'CNavItem',
-        name: 'Select',
-        to: '/forms/select',
+        name: 'Danh Mục',
+        to: '/thuoc-tinh/danh-muc',
       },
       {
         component: 'CNavItem',
         name: 'Chất liệu',
         to: '/thuoc-tinh/chat-lieu',
-      },
-      {
-        component: 'CNavItem',
-        name: 'Range',
-        to: '/forms/range',
       },
       {
         component: 'CNavItem',
