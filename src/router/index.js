@@ -242,6 +242,17 @@ const routes = [
         ],
       },
       {
+        path: '/sneakers/online',
+        name: 'Sneakers',
+        component: () => import('@/views/sneakers/Sneakers.vue'),
+      },
+      {
+        path: '/cart/online',
+        name: 'Cart',
+        component: () => import('@/views/sneakers/Cart.vue'),
+      },
+
+      {
         path: '/notifications',
         name: 'Notifications',
         component: {

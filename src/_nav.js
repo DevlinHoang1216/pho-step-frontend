@@ -142,7 +142,7 @@ export default [
           color: 'danger',
           text: 'PRO',
         },
-      }
+      },
     ],
   },
   {
@@ -157,45 +157,45 @@ export default [
         icon: 'cil-layers', // Kept cil-layers, suitable for products
         to: '/products-manager/products-list',
       },
-        {
+      {
         component: 'CNavItem',
         name: 'Thuoc Tinh',
         to: '/products-manager',
         icon: 'cil-notes', // Kept cil-notes, suitable for attributes
         items: [
-      {
-        component: 'CNavItem',
-        name: 'Hang',
-        to: '/products-manager',
+          {
+            component: 'CNavItem',
+            name: 'Hang',
+            to: '/products-manager',
+          },
+          {
+            component: 'CNavItem',
+            name: 'Chat Lieu',
+            to: '/products-manager',
+          },
+          {
+            component: 'CNavItem',
+            name: 'Mau Sac',
+            to: '/products-manager',
+          },
+          {
+            component: 'CNavItem',
+            name: 'Kich Co',
+            to: '/products-manager',
+          },
+          {
+            component: 'CNavItem',
+            name: 'Loai Giay',
+            to: '/products-manager',
+          },
+          {
+            component: 'CNavItem',
+            name: 'Nha San Xuat',
+            icon: 'cil-layers',
+            to: '/products-manager',
+          },
+        ],
       },
-      {
-        component: 'CNavItem',
-         name: 'Chat Lieu',
-        to: '/products-manager',
-      },
-      {
-        component: 'CNavItem',
-        name: 'Mau Sac',
-        to: '/products-manager',
-      },
-      {
-        component: 'CNavItem',
-        name: 'Kich Co',
-        to: '/products-manager',
-      },
-      {
-        component: 'CNavItem',
-        name: 'Loai Giay',
-        to: '/products-manager',
-      },
-      {
-        component: 'CNavItem',
-        name: 'Nha San Xuat',
-         icon: 'cil-layers',
-        to: '/products-manager',
-      },
-    ],
-  },
     ],
   },
   {
@@ -227,9 +227,19 @@ export default [
     name: 'Nhan Vien',
     to: '/notifications',
     icon: 'cil-people', // Changed from cil-bell to cil-people for better representation of 'employees'
-    items: [
-
-    ],
+    items: [],
+  },
+  {
+    component: 'CNavItem',
+    name: 'Sản phẩm Online',
+    to: '/sneakers/online',
+    icon: 'cil-list',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Giỏ hàng',
+    to: '/cart/online',
+    icon: 'cil-cart',
   },
 
   {

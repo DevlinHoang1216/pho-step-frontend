@@ -1,10 +1,11 @@
 <script setup>
-import { onBeforeMount } from 'vue'
+import { onBeforeMount, ref, watch, provide, computed } from 'vue'
 import { useColorModes } from '@coreui/vue'
 
 import { useThemeStore } from '@/stores/theme.js'
 // Đảm bảo đường dẫn này là chính xác
 import GlobalToastContainer from '@/views/notifications/Toasts.vue'; // HOẶC '@/components/Toasts.vue' tùy cấu trúc dự án của bạn
+
 
 const { isColorModeSet, setColorMode } = useColorModes(
   'coreui-free-vue-admin-template-theme',
@@ -30,6 +31,7 @@ onBeforeMount(() => {
 
   setColorMode(currentTheme.theme)
 })
+
 </script>
 
 <template>
