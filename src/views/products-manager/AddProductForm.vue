@@ -1012,6 +1012,17 @@ export default {
     // Không cần watch selectedProductMainImageUrl ở đây nữa
   },
   methods: {
+      getImageUrl(url) {
+    // Bước 1: Đảm bảo 'url' là một chuỗi. Nếu không phải, gán nó thành chuỗi rỗng.
+    const finalUrl = typeof url === 'string' ? url : ''; 
+
+    // Bước 2: Kiểm tra xem 'finalUrl' có phải là URL tuyệt đối (http/https) hoặc Base64 không.
+    if (finalUrl.startsWith('http://') || finalUrl.startsWith('https://') || finalUrl.startsWith('data:image/')) {
+        return finalUrl; // Trả về URL tuyệt đối hoặc Base64 nguyên bản
+    }
+    // Bước 3: Nếu không phải, giả định đó là đường dẫn tương đối và thêm baseUrl vào.
+    return this.baseUrl + finalUrl;
+},
     // PHƯƠNG THỨC MỚI ĐỂ TẠO VÀ QUẢN LÝ productVariations
     generateProductVariations() {
       const newVariations = [];
@@ -1852,11 +1863,11 @@ export default {
         this.toast.error('Vui lòng nhập URL ảnh.')
         return
       }
-      // Basic URL validation
-      if (!/^https?:\/\/.+\.(jpg|png|gif|jpeg)$/i.test(this.newImageUrl)) { // Added .jpeg
-        this.toast.error('URL ảnh không hợp lệ. Chỉ chấp nhận .jpg, .png, .gif, .jpeg.')
-        return
-      }
+      // // Basic URL validation
+      // if (!/^https?:\/\/.+\.(jpg|png|gif|jpeg)$/i.test(this.newImageUrl)) { // Added .jpeg
+      //   this.toast.error('URL ảnh không hợp lệ. Chỉ chấp nhận .jpg, .png, .gif, .jpeg.')
+      //   return
+      // }
       if (this.allImagesList.some((img) => img.url === this.newImageUrl)) {
         this.toast.warning('Ảnh này đã tồn tại trong danh sách.')
         return

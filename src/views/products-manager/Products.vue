@@ -1182,11 +1182,11 @@ export default {
         this.toast.error('Vui lòng nhập URL ảnh.');
         return;
       }
-      // Basic URL validation
-      if (!/^https?:\/\/.+\.(jpg|png|gif|jpeg)$/i.test(this.newImageUrlInput)) {
-        this.toast.error('URL ảnh không hợp lệ. Chỉ chấp nhận .jpg, .png, .gif, .jpeg.');
-        return;
-      }
+      // // Basic URL validation
+      // if (!/^https?:\/\/.+\.(jpg|png|gif|jpeg)$/i.test(this.newImageUrlInput)) {
+      //   this.toast.error('URL ảnh không hợp lệ. Chỉ chấp nhận .jpg, .png, .gif, .jpeg.');
+      //   return;
+      // }
       if (this.imagesListForModal.some((img) => img.url === this.newImageUrlInput)) {
         this.toast.warning('Ảnh này đã tồn tại trong danh sách.');
         return;

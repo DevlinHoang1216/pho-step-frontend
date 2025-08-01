@@ -21,37 +21,49 @@
       <div class="col-md-4 col-sm-6 col-12 mb-2">
         <CFormSelect v-model="filterProduct" @change="filterAndSortProducts">
           <option value="">Tat ca san pham</option>
-          <option v-for="product in productsList" :key="product.id" :value="product.id">{{ product.tenSanPham }}</option>
+          <option v-for="product in productsList" :key="product.id" :value="product.id">
+            {{ product.tenSanPham }}
+          </option>
         </CFormSelect>
       </div>
       <div class="col-md-4 col-sm-6 col-12 mb-2">
         <CFormSelect v-model="filterBrand" @change="filterAndSortProducts">
           <option value="">Tat ca hang</option>
-          <option v-for="brand in brandsList" :key="brand.id" :value="brand.id">{{ brand.tenThuongHieu }}</option>
+          <option v-for="brand in brandsList" :key="brand.id" :value="brand.id">
+            {{ brand.tenThuongHieu }}
+          </option>
         </CFormSelect>
       </div>
       <div class="col-md-4 col-sm-6 col-12 mb-2">
         <CFormSelect v-model="filterType" @change="filterAndSortProducts">
           <option value="">Tat ca loai giay</option>
-          <option v-for="category in categoriesList" :key="category.id" :value="category.id">{{ category.tenDanhMuc }}</option>
+          <option v-for="category in categoriesList" :key="category.id" :value="category.id">
+            {{ category.tenDanhMuc }}
+          </option>
         </CFormSelect>
       </div>
       <div class="col-md-4 col-sm-6 col-12 mb-2">
         <CFormSelect v-model="filterColor" @change="filterAndSortProducts">
           <option value="">Tat ca mau sac</option>
-          <option v-for="color in colorsList" :key="color.id" :value="color.id">{{ color.tenMauSac }}</option>
+          <option v-for="color in colorsList" :key="color.id" :value="color.id">
+            {{ color.tenMauSac }}
+          </option>
         </CFormSelect>
       </div>
       <div class="col-md-4 col-sm-6 col-12 mb-2">
         <CFormSelect v-model="filterMaterial" @change="filterAndSortProducts">
           <option value="">Tat ca chat lieu</option>
-          <option v-for="material in materialsList" :key="material.id" :value="material.id">{{ material.tenChatLieu }}</option>
+          <option v-for="material in materialsList" :key="material.id" :value="material.id">
+            {{ material.tenChatLieu }}
+          </option>
         </CFormSelect>
       </div>
       <div class="col-md-4 col-sm-6 col-12 mb-2">
         <CFormSelect v-model="filterSize" @change="filterAndSortProducts">
           <option value="">Tat ca kich co</option>
-          <option v-for="size in sizesList" :key="size.id" :value="size.id">{{ size.tenKichCo }}</option>
+          <option v-for="size in sizesList" :key="size.id" :value="size.id">
+            {{ size.tenKichCo }}
+          </option>
         </CFormSelect>
       </div>
       <div class="col-md-4 col-sm-6 col-12 mb-2">
@@ -110,8 +122,13 @@
             <td class="text-center">{{ index + 1 + (currentPage - 1) * pageSize }}</td>
             <td>{{ product.name }}</td>
             <td class="text-center">
-              <img :src="product.image" alt="product image" width="50" class="rounded"
-                   onerror="this.onerror=null; this.src='https://placehold.co/50x50/FF0000/FFFFFF?text=Error';" />
+              <img
+                :src="product.image"
+                alt="product image"
+                width="50"
+                class="rounded"
+                onerror="this.onerror=null; this.src='https://placehold.co/50x50/FF0000/FFFFFF?text=Error';"
+              />
             </td>
             <td>{{ product.brand }}</td>
             <td>{{ product.type }}</td>
@@ -184,10 +201,7 @@
     </div>
 
     <CPagination align="center" class="mt-3">
-      <CPaginationItem
-        :disabled="currentPage === 1"
-        @click="changePage(currentPage - 1)"
-      >
+      <CPaginationItem :disabled="currentPage === 1" @click="changePage(currentPage - 1)">
         Truoc
       </CPaginationItem>
       <CPaginationItem
@@ -213,41 +227,101 @@
         <CButtonClose @click="closeAddProductDetailModal" :style="{ color: '#FFFFFF' }" />
       </CModalHeader>
       <CModalBody>
-        <CFormInput v-model="newProductDetail.parentProductId" label="ID San pham goc" class="mb-3 custom-input" @blur="loadParentProductInfo" placeholder="Nhap ID san pham da tao" />
-        <CFormInput v-model="newProductDetail.name" label="Ten san pham" class="mb-3 custom-input" disabled />
-        <CFormInput v-model="newProductDetail.image" label="URL anh san pham" class="mb-3 custom-input" disabled />
+        <CFormInput
+          v-model="newProductDetail.parentProductId"
+          label="ID San pham goc"
+          class="mb-3 custom-input"
+          @blur="loadParentProductInfo"
+          placeholder="Nhap ID san pham da tao"
+        />
+        <CFormInput
+          v-model="newProductDetail.name"
+          label="Ten san pham"
+          class="mb-3 custom-input"
+          disabled
+        />
+        <CFormInput
+          v-model="newProductDetail.image"
+          label="URL anh san pham"
+          class="mb-3 custom-input"
+          disabled
+        />
 
         <CFormSelect v-model="newProductDetail.brand" label="Hang" class="mb-3 custom-input">
-            <option value="">Chon hang</option>
-            <option v-for="brand in brandsList" :key="brand.id" :value="Number(brand.id)">{{ brand.tenThuongHieu }}</option>
+          <option value="">Chon hang</option>
+          <option v-for="brand in brandsList" :key="brand.id" :value="Number(brand.id)">
+            {{ brand.tenThuongHieu }}
+          </option>
         </CFormSelect>
         <CFormSelect v-model="newProductDetail.type" label="Loai giay" class="mb-3 custom-input">
-            <option value="">Chon loai giay</option>
-            <option v-for="category in categoriesList" :key="category.id" :value="Number(category.id)">{{ category.tenDanhMuc }}</option>
+          <option value="">Chon loai giay</option>
+          <option
+            v-for="category in categoriesList"
+            :key="category.id"
+            :value="Number(category.id)"
+          >
+            {{ category.tenDanhMuc }}
+          </option>
         </CFormSelect>
         <CFormSelect v-model="newProductDetail.color" label="Mau sac" class="mb-3 custom-input">
-            <option value="">Chon mau sac</option>
-            <option v-for="color in colorsList" :key="color.id" :value="Number(color.id)">{{ color.tenMauSac }}</option>
+          <option value="">Chon mau sac</option>
+          <option v-for="color in colorsList" :key="color.id" :value="Number(color.id)">
+            {{ color.tenMauSac }}
+          </option>
         </CFormSelect>
-        <CFormSelect v-model="newProductDetail.material" label="Chat lieu" class="mb-3 custom-input">
-            <option value="">Chon chat lieu</option>
-            <option v-for="material in materialsList" :key="material.id" :value="Number(material.id)">{{ material.tenChatLieu }}</option>
+        <CFormSelect
+          v-model="newProductDetail.material"
+          label="Chat lieu"
+          class="mb-3 custom-input"
+        >
+          <option value="">Chon chat lieu</option>
+          <option v-for="material in materialsList" :key="material.id" :value="Number(material.id)">
+            {{ material.tenChatLieu }}
+          </option>
         </CFormSelect>
         <CFormSelect v-model="newProductDetail.size" label="Kich co" class="mb-3 custom-input">
-            <option value="">Chon kich co</option>
-            <option v-for="size in sizesList" :key="size.id" :value="Number(size.id)">{{ size.tenKichCo }}</option>
+          <option value="">Chon kich co</option>
+          <option v-for="size in sizesList" :key="size.id" :value="Number(size.id)">
+            {{ size.tenKichCo }}
+          </option>
         </CFormSelect>
 
-        <CFormInput type="number" v-model="newProductDetail.quantity" label="So luong" class="mb-3 custom-input" />
-        <CFormInput type="number" v-model="newProductDetail.price" label="Gia" class="mb-3 custom-input" />
-        <CFormSelect v-model="newProductDetail.statusId" label="Trang thai" class="mb-3 custom-input">
-            <option value="">Chon trang thai</option>
-            <option v-for="status in statusesList" :key="status.id" :value="Number(status.id)">{{ getDisplayStatusName(status.tenTrangThai) }}</option>
+        <CFormInput
+          type="number"
+          v-model="newProductDetail.quantity"
+          label="So luong"
+          class="mb-3 custom-input"
+        />
+        <CFormInput
+          type="number"
+          v-model="newProductDetail.price"
+          label="Gia"
+          class="mb-3 custom-input"
+        />
+        <CFormSelect
+          v-model="newProductDetail.statusId"
+          label="Trang thai"
+          class="mb-3 custom-input"
+        >
+          <option value="">Chon trang thai</option>
+          <option v-for="status in statusesList" :key="status.id" :value="Number(status.id)">
+            {{ getDisplayStatusName(status.tenTrangThai) }}
+          </option>
         </CFormSelect>
       </CModalBody>
       <CModalFooter>
-        <CButton color="secondary" @click="closeAddProductDetailModal" :style="{ backgroundColor: '#D3D3D3', borderColor: '#D3D3D3', color: '#000000' }">Huy</CButton>
-        <CButton color="primary" @click="addNewProductDetail" :style="{ backgroundColor: '#8B0000', borderColor: '#8B0000', color: '#FFFFFF' }">Them chi tiet</CButton>
+        <CButton
+          color="secondary"
+          @click="closeAddProductDetailModal"
+          :style="{ backgroundColor: '#D3D3D3', borderColor: '#D3D3D3', color: '#000000' }"
+          >Huy</CButton
+        >
+        <CButton
+          color="primary"
+          @click="addNewProductDetail"
+          :style="{ backgroundColor: '#8B0000', borderColor: '#8B0000', color: '#FFFFFF' }"
+          >Them chi tiet</CButton
+        >
       </CModalFooter>
     </CModal>
 
@@ -258,43 +332,112 @@
         <CButtonClose @click="showEditProductDetailModal = false" :style="{ color: '#FFFFFF' }" />
       </CModalHeader>
       <CModalBody>
-        <p>Nhap thong tin muon sua (Hang, Loai giay, Mau sac, Chat lieu, Kich co, Gia, So luong, Trang thai).</p>
-        <CFormInput v-model="editingProductDetail.name" label="Ten san pham" class="mb-3 custom-input" disabled />
-        <CFormInput v-model="editingProductDetail.image" label="URL anh san pham" class="mb-3 custom-input" disabled />
-        
+        <p>
+          Nhap thong tin muon sua (Hang, Loai giay, Mau sac, Chat lieu, Kich co, Gia, So luong,
+          Trang thai).
+        </p>
+        <CFormInput
+          v-model="editingProductDetail.name"
+          label="Ten san pham"
+          class="mb-3 custom-input"
+          disabled
+        />
+        <CFormInput
+          v-model="editingProductDetail.image"
+          label="URL anh san pham"
+          class="mb-3 custom-input"
+          disabled
+        />
+
         <CFormSelect v-model="editingProductDetail.brand" label="Hang" class="mb-3 custom-input">
-            <option value="">Chon hang</option>
-            <option v-for="brand in brandsList" :key="brand.id" :value="Number(brand.id)">{{ brand.tenThuongHieu }}</option>
+          <option value="">Chon hang</option>
+          <option v-for="brand in brandsList" :key="brand.id" :value="Number(brand.id)">
+            {{ brand.tenThuongHieu }}
+          </option>
         </CFormSelect>
-        <CFormSelect v-model="editingProductDetail.type" label="Loai giay" class="mb-3 custom-input">
-            <option value="">Chon loai giay</option>
-            <option v-for="category in categoriesList" :key="category.id" :value="Number(category.id)">{{ category.tenDanhMuc }}</option>
+        <CFormSelect
+          v-model="editingProductDetail.type"
+          label="Loai giay"
+          class="mb-3 custom-input"
+        >
+          <option value="">Chon loai giay</option>
+          <option
+            v-for="category in categoriesList"
+            :key="category.id"
+            :value="Number(category.id)"
+          >
+            {{ category.tenDanhMuc }}
+          </option>
         </CFormSelect>
         <CFormSelect v-model="editingProductDetail.color" label="Mau sac" class="mb-3 custom-input">
-            <option value="">Chon mau sac</option>
-            <option v-for="color in colorsList" :key="color.id" :value="Number(color.id)">{{ color.tenMauSac }}</option>
+          <option value="">Chon mau sac</option>
+          <option v-for="color in colorsList" :key="color.id" :value="Number(color.id)">
+            {{ color.tenMauSac }}
+          </option>
         </CFormSelect>
-        <CFormSelect v-model="editingProductDetail.material" label="Chat lieu" class="mb-3 custom-input">
-            <option value="">Chon chat lieu</option>
-            <option v-for="material in materialsList" :key="material.id" :value="Number(material.id)">{{ material.tenChatLieu }}</option>
+        <CFormSelect
+          v-model="editingProductDetail.material"
+          label="Chat lieu"
+          class="mb-3 custom-input"
+        >
+          <option value="">Chon chat lieu</option>
+          <option v-for="material in materialsList" :key="material.id" :value="Number(material.id)">
+            {{ material.tenChatLieu }}
+          </option>
         </CFormSelect>
         <CFormSelect v-model="editingProductDetail.size" label="Kich co" class="mb-3 custom-input">
-            <option value="">Chon kich co</option>
-            <option v-for="size in sizesList" :key="size.id" :value="Number(size.id)">{{ size.tenKichCo }}</option>
+          <option value="">Chon kich co</option>
+          <option v-for="size in sizesList" :key="size.id" :value="Number(size.id)">
+            {{ size.tenKichCo }}
+          </option>
         </CFormSelect>
 
-        <CFormInput type="number" v-model="editingProductDetail.quantity" label="So luong" class="mb-3 custom-input" />
-        <CFormInput type="number" v-model="editingProductDetail.price" label="Gia" class="mb-3 custom-input" />
-        <CFormTextarea v-model="editingProductDetail.moTaChiTiet" label="Mo ta chi tiet" class="mb-3 custom-input"></CFormTextarea>
-        <CFormInput v-model="editingProductDetail.maCtsp" label="Ma chi tiet san pham" class="mb-3 custom-input" />
-        <CFormSelect v-model="editingProductDetail.statusId" label="Trang thai" class="mb-3 custom-input">
-            <option value="">Chon trang thai</option>
-            <option v-for="status in statusesList" :key="status.id" :value="Number(status.id)">{{ getDisplayStatusName(status.tenTrangThai) }}</option>
+        <CFormInput
+          type="number"
+          v-model="editingProductDetail.quantity"
+          label="So luong"
+          class="mb-3 custom-input"
+        />
+        <CFormInput
+          type="number"
+          v-model="editingProductDetail.price"
+          label="Gia"
+          class="mb-3 custom-input"
+        />
+        <CFormTextarea
+          v-model="editingProductDetail.moTaChiTiet"
+          label="Mo ta chi tiet"
+          class="mb-3 custom-input"
+        ></CFormTextarea>
+        <CFormInput
+          v-model="editingProductDetail.maCtsp"
+          label="Ma chi tiet san pham"
+          class="mb-3 custom-input"
+        />
+        <CFormSelect
+          v-model="editingProductDetail.statusId"
+          label="Trang thai"
+          class="mb-3 custom-input"
+        >
+          <option value="">Chon trang thai</option>
+          <option v-for="status in statusesList" :key="status.id" :value="Number(status.id)">
+            {{ getDisplayStatusName(status.tenTrangThai) }}
+          </option>
         </CFormSelect>
       </CModalBody>
       <CModalFooter>
-        <CButton color="secondary" @click="showEditProductDetailModal = false" :style="{ backgroundColor: '#D3D3D3', borderColor: '#D3D3D3', color: '#000000' }">Huy</CButton>
-        <CButton color="primary" @click="saveEditedProductDetail" :style="{ backgroundColor: '#8B0000', borderColor: '#8B0000', color: '#FFFFFF' }">Xac nhan</CButton>
+        <CButton
+          color="secondary"
+          @click="showEditProductDetailModal = false"
+          :style="{ backgroundColor: '#D3D3D3', borderColor: '#D3D3D3', color: '#000000' }"
+          >Huy</CButton
+        >
+        <CButton
+          color="primary"
+          @click="saveEditedProductDetail"
+          :style="{ backgroundColor: '#8B0000', borderColor: '#8B0000', color: '#FFFFFF' }"
+          >Xac nhan</CButton
+        >
       </CModalFooter>
     </CModal>
 
@@ -339,7 +482,7 @@
             </div>
           </CCol>
         </CRow>
-        <div class="image-upload-preview border p-3 rounded mb-3" style="min-height: 200px;">
+        <div class="image-upload-preview border p-3 rounded mb-3" style="min-height: 200px">
           <h5 class="mb-3">Anh da tai len:</h5>
           <div v-if="imagesListForModal.length === 0" class="text-muted">
             Chua co anh nao duoc tai len.
@@ -349,11 +492,20 @@
               v-for="image in imagesListForModal"
               :key="image.id"
               class="image-item me-3 mb-3 border rounded p-2"
-              :class="{ 'image-selected': image.selected, 'image-representative': image.laAnhDaiDien }"
+              :class="{
+                'image-selected': image.selected,
+                'image-representative': image.laAnhDaiDien,
+              }"
               @click="toggleImageSelectionInModal(image.id)"
               @mouseover="image.hover = true"
               @mouseleave="image.hover = false"
-              style="width: 120px; height: 120px; position: relative; cursor: pointer; overflow: hidden;"
+              style="
+                width: 120px;
+                height: 120px;
+                position: relative;
+                cursor: pointer;
+                overflow: hidden;
+              "
             >
               <img
                 :src="image.url"
@@ -363,7 +515,10 @@
               />
 
               <!-- Dimming overlay on hover or selected -->
-              <div class="image-dimming-overlay" :class="{'active': image.selected || image.hover}"></div>
+              <div
+                class="image-dimming-overlay"
+                :class="{ active: image.selected || image.hover }"
+              ></div>
 
               <!-- Checkmark icon (always visible if selected, positioned on top) -->
               <div v-if="image.selected" class="image-checkmark-icon">
@@ -372,21 +527,21 @@
 
               <!-- Representative Radio Button (optional, based on user preference) -->
               <div class="image-radio-group">
-                  <div class="image-radio-item">
-                      <input
-                          type="radio"
-                          :id="'radio-rep-' + image.id"
-                          :name="'representative-image-for-' + currentProductDetailIdForImages"
-                          :value="image.id"
-                          v-model="selectedRepresentativeImageId"
-                          @click.stop="toggleRepresentativeImage(image.id)"
-                      />
-                      <label :for="'radio-rep-' + image.id" class="ms-1">Dai dien</label>
-                  </div>
+                <div class="image-radio-item">
+                  <input
+                    type="radio"
+                    :id="'radio-rep-' + image.id"
+                    :name="'representative-image-for-' + currentProductDetailIdForImages"
+                    :value="image.id"
+                    v-model="selectedRepresentativeImageId"
+                    @click.stop="toggleRepresentativeImage(image.id)"
+                  />
+                  <label :for="'radio-rep-' + image.id" class="ms-1">Dai dien</label>
+                </div>
               </div>
 
               <!-- Actions (delete button) only visible on hover -->
-              <div class="image-actions-overlay" :class="{'active': image.hover}">
+              <div class="image-actions-overlay" :class="{ active: image.hover }">
                 <CButton
                   :style="{
                     backgroundColor: 'rgba(139, 0, 0, 0.7)',
@@ -415,7 +570,12 @@
           @click="saveImagesForProductDetail"
           :disabled="uploadingImages"
         >
-          <span v-if="uploadingImages" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          <span
+            v-if="uploadingImages"
+            class="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
           <span v-if="uploadingImages"> Dang luu...</span>
           <span v-else>Luu Anh</span>
         </CButton>
@@ -425,19 +585,19 @@
 </template>
 
 <script>
-import { CIcon } from '@coreui/icons-vue';
-import * as icon from '@coreui/icons';
-import * as XLSX from 'xlsx';
-import { inject } from 'vue'; // Import inject de su dung toast
-import axios from 'axios'; // Import axios
+import { CIcon } from '@coreui/icons-vue'
+import * as icon from '@coreui/icons'
+import * as XLSX from 'xlsx'
+import { inject } from 'vue' // Import inject de su dung toast
+import axios from 'axios' // Import axios
 
 export default {
   components: {
-    CIcon
+    CIcon,
   },
   setup() {
-    const toast = inject('$toast'); // Inject toast vao setup
-    return { toast }; // Tra ve toast de co the su dung trong data và methods
+    const toast = inject('$toast') // Inject toast vao setup
+    return { toast } // Tra ve toast de co the su dung trong data và methods
   },
   data() {
     return {
@@ -463,16 +623,23 @@ export default {
         id: null, // ID cua bien the nay (se duoc tao tu dong)
         image: '', // Anh san pham goc (tu dong dien)
         name: '', // Ten san pham goc (tu dong dien)
-        brand: '', type: '', color: '', material: '', size: '', quantity: 0, price: 0, statusId: null // Mac dinh la null, se chon tu dropdown
+        brand: '',
+        type: '',
+        color: '',
+        material: '',
+        size: '',
+        quantity: 0,
+        price: 0,
+        statusId: null, // Mac dinh la null, se chon tu dropdown
       },
       // Danh sach du lieu cho cac combobox
       productsList: [], // Danh sach san pham chinh
       categoriesList: [], // Danh muc
-      brandsList: [],     // Thuong hieu
-      materialsList: [],  // Chat lieu
-      colorsList: [],     // Mau sac
-      sizesList: [],      // Kich co
-      statusesList: [],   // NEW: Danh sach trang thai
+      brandsList: [], // Thuong hieu
+      materialsList: [], // Chat lieu
+      colorsList: [], // Mau sac
+      sizesList: [], // Kich co
+      statusesList: [], // NEW: Danh sach trang thai
       baseUrl: 'http://localhost:8080', // Base URL cho API
 
       // NEW: Data cho Modal Quan Ly Anh
@@ -483,37 +650,57 @@ export default {
       originalImagesOfCurrentProductDetail: [], // Để so sánh khi lưu và xác định ảnh cần xóa
       selectedRepresentativeImageId: null, // ID của ảnh được chọn làm đại diện trong modal
       uploadingImages: false, // Cờ để quản lý trạng thái tải lên ảnh
-    };
+    }
   },
   computed: {
+  
     totalPages() {
-      return Math.ceil(this.products.length / this.pageSize);
+      return Math.ceil(this.products.length / this.pageSize)
     },
     paginatedProducts() {
-      const start = (this.currentPage - 1) * this.pageSize;
-      return this.products.slice(start, start + this.pageSize);
+      const start = (this.currentPage - 1) * this.pageSize
+      return this.products.slice(start, start + this.pageSize)
     },
   },
   created() {
-    this.loadInitialData(); // Tai du lieu combobox va du lieu bang ban dau
+    this.loadInitialData() // Tai du lieu combobox va du lieu bang ban dau
   },
   methods: {
+     getImageUrl(url) {
+    // Bước 1: Đảm bảo 'url' là một chuỗi. Nếu không phải, gán nó thành chuỗi rỗng.
+    const finalUrl = typeof url === 'string' ? url : ''; 
+
+    // Bước 2: Kiểm tra xem 'finalUrl' có phải là URL tuyệt đối (http/https) hoặc Base64 không.
+    if (finalUrl.startsWith('http://') || finalUrl.startsWith('https://') || finalUrl.startsWith('data:image/')) {
+        return finalUrl; // Trả về URL tuyệt đối hoặc Base64 nguyên bản
+    }
+    // Bước 3: Nếu không phải, giả định đó là đường dẫn tương đối và thêm baseUrl vào.
+    return this.baseUrl + finalUrl;
+},
     formatCurrency(value) {
-      if (value == null) return '';
-      return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+      if (value == null) return ''
+      return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value)
     },
     onPageSizeChange() {
-      this.currentPage = 1; // Reset ve trang dau tien khi thay doi kich thuoc trang
-      this.filterAndSortProducts(); // Ap dung lai bo loc va sap xep voi kich thuoc trang moi
+      this.currentPage = 1 // Reset ve trang dau tien khi thay doi kich thuoc trang
+      this.filterAndSortProducts() // Ap dung lai bo loc va sap xep voi kich thuoc trang moi
     },
     openAddProductDetailModal() {
-      this.resetNewProductDetail();
-      this.showAddProductDetailModal = true;
+      this.resetNewProductDetail()
+      this.showAddProductDetailModal = true
     },
     async loadInitialData() {
       try {
         // Tai du lieu cho cac combobox
-        const [productsRes, categoriesRes, brandsRes, materialsRes, colorsRes, sizesRes, statusesRes] = await Promise.all([
+        const [
+          productsRes,
+          categoriesRes,
+          brandsRes,
+          materialsRes,
+          colorsRes,
+          sizesRes,
+          statusesRes,
+        ] = await Promise.all([
           axios.get(`${this.baseUrl}/api/san-phams`), // Lay danh sach san pham de dien combobox "Ten san pham"
           axios.get(`${this.baseUrl}/api/danh-mucs`),
           axios.get(`${this.baseUrl}/api/thuongHieus`),
@@ -521,89 +708,88 @@ export default {
           axios.get(`${this.baseUrl}/api/mauSacs`),
           axios.get(`${this.baseUrl}/api/kichCos`),
           axios.get(`${this.baseUrl}/api/trangThais`), // NEW: Tai danh sach trang thai
-        ]);
+        ])
 
-        this.productsList = productsRes.data.content; 
-        this.categoriesList = categoriesRes.data;
-        this.brandsList = brandsRes.data;
-        this.materialsList = materialsRes.data;
-        this.colorsList = colorsRes.data;
-        this.sizesList = sizesRes.data;
-        this.statusesList = statusesRes.data; // NEW: Gan danh sach trang thai
+        this.productsList = productsRes.data.content
+        this.categoriesList = categoriesRes.data
+        this.brandsList = brandsRes.data
+        this.materialsList = materialsRes.data
+        this.colorsList = colorsRes.data
+        this.sizesList = sizesRes.data
+        this.statusesList = statusesRes.data // NEW: Gan danh sach trang thai
 
         // Tai du lieu cho bang chi tiet san pham
-        await this.loadProducts();
-        this.toast.success('Da tai du lieu ban dau thanh cong!');
+        await this.loadProducts()
+        this.toast.success('Da tai du lieu ban dau thanh cong!')
       } catch (error) {
-        console.error('Loi khi tai du lieu ban dau:', error);
-        this.toast.error('Khong the tai du lieu ban dau. Vui long thu lai.');
+        console.error('Loi khi tai du lieu ban dau:', error)
+        this.toast.error('Khong the tai du lieu ban dau. Vui long thu lai.')
       }
     },
     async loadProducts() {
       try {
-        const response = await axios.get(`${this.baseUrl}/api/chi-tiet-san-phams`);
-        // Map the backend DTOs to the frontend product structure
-        this.originalProducts = response.data.map(detail => {
-          console.log("Detail object from backend (Products-Detail.vue loadProducts):", detail); // Log the full detail object
+        const response = await axios.get(`${this.baseUrl}/api/chi-tiet-san-phams`)
+        this.originalProducts = response.data.map((detail) => {
+          console.log('Detail object from backend (Products-Detail.vue loadProducts):', detail)
 
-          let imageUrl = 'https://placehold.co/50x50/cccccc/000000?text=No+Image'; // Default fallback
-
-          // Prioritize image from the 'images' array if available and marked as representative
+          let imageUrl = 'https://placehold.co/50x50/cccccc/000000?text=No+Image' // Default fallback
           if (detail.images && Array.isArray(detail.images) && detail.images.length > 0) {
-            const representative = detail.images.find(img => img.laAnhDaiDien);
-            if (representative && representative.urlAnh && typeof representative.urlAnh === 'string' && representative.urlAnh.trim() !== '') {
-              // PREPEND baseUrl here
-              imageUrl = this.baseUrl + representative.urlAnh;
-            } else if (detail.images[0] && detail.images[0].urlAnh && typeof detail.images[0].urlAnh === 'string' && detail.images[0].urlAnh.trim() !== '') {
-              // Fallback to first image if no representative - PREPEND baseUrl here
-              imageUrl = this.baseUrl + detail.images[0].urlAnh;
+            const representative = detail.images.find((img) => img.laAnhDaiDien)
+            if (representative && representative.urlAnh) {
+              // Chỉ kiểm tra sự tồn tại
+              imageUrl = this.getImageUrl(representative.urlAnh || '') // Đảm bảo là chuỗi rỗng nếu null/undefined
+            } else if (detail.images[0] && detail.images[0].urlAnh) {
+              // Chỉ kiểm tra sự tồn tại
+              imageUrl = this.getImageUrl(detail.images[0].urlAnh || '') // Đảm bảo là chuỗi rỗng nếu null/undefined
             }
           }
-          console.log(`Product Detail ID: ${detail.id}, Image URL: ${imageUrl}`); // Log image URL for each detail
+          console.log(`Product Detail ID: ${detail.id}, Image URL: ${imageUrl}`)
 
           return {
             id: detail.id,
-            productId: detail.sanPham, // Assuming sanPham is the ID of the parent product
-            image: imageUrl, // Use the determined image URL
+            productId: detail.sanPham,
+            image: imageUrl,
             name: detail.tenSanPham,
             brand: detail.tenThuongHieu,
-            brandId: detail.thuongHieu, // Store ID
+            brandId: detail.thuongHieu,
             type: detail.tenDanhMuc,
-            typeId: detail.danhMuc, // Store ID
+            typeId: detail.danhMuc,
             color: detail.tenMauSac,
-            colorId: detail.mauSac, // Store ID
+            colorId: detail.mauSac,
             material: detail.tenChatLieu,
-            materialId: detail.chatLieu, // Store ID
+            materialId: detail.chatLieu,
             size: detail.tenKichCo,
-            sizeId: detail.kichCo, // Store ID
+            sizeId: detail.kichCo,
             quantity: detail.soLuongTonKho,
             price: detail.giaBan,
-            status: detail.tenTrangThaiRieng, // Use tenTrangThaiRieng for display
-            statusId: detail.idTrangThaiRieng, // Store ID for editing
-            active: detail.tenTrangThaiRieng === 'dang_kinh_doanh', // For toggle switch logic
-            moTaChiTiet: detail.moTaChiTiet, // Map moTaChiTiet
-            maCtsp: detail.maCtsp, // Map maCtsp
-            images: detail.images ? detail.images.map(img => ({ // NEW: Map images for product detail
-                id: img.id,
-                url: this.baseUrl + img.urlAnh, // PREPEND baseUrl here for modal images too
-                laAnhDaiDien: img.laAnhDaiDien,
-                isNew: false, // Mark as existing image
-                file: null, // No file object for existing images
-                selected: true, // Mark as selected by default
-                hover: false,
-            })) : [],
-          };
-        });
-        this.products = [...this.originalProducts];
-        this.toast.success('Da tai danh sach chi tiet san pham thanh cong!');
+            status: detail.tenTrangThaiRieng,
+            statusId: detail.idTrangThaiRieng,
+            active: detail.tenTrangThaiRieng === 'dang_kinh_doanh',
+            moTaChiTiet: detail.moTaChiTiet,
+            maCtsp: detail.maCtsp,
+            images: detail.images
+              ? detail.images.map((img) => ({
+                  id: img.id,
+                  url: this.getImageUrl(img.urlAnh || ''), // Áp dụng tương tự ở đây
+                  laAnhDaiDien: img.laAnhDaiDien,
+                  isNew: false,
+                  file: null,
+                  selected: true,
+                  hover: false,
+                }))
+              : [],
+          }
+        })
+        this.products = [...this.originalProducts]
+        this.toast.success('Đã tải danh sách chi tiết sản phẩm thành công!')
       } catch (error) {
-        console.error('Loi khi tai danh sach chi tiet san pham:', error);
-        this.toast.error('Khong the tai danh sach chi tiet san pham. Vui long thu lai.');
+        console.error('Lỗi khi tải danh sách chi tiết san pham:', error)
+        this.toast.error('Không thể tải danh sách chi tiết sản phẩm. Vui lòng thử lại.')
       }
     },
     // Cap nhat phuong thuc searchProducts de goi filterAndSortProducts
     searchProducts() {
-      this.filterAndSortProducts(); // Goi phuong thuc loc va sap xep chinh
+      this.filterAndSortProducts() // Goi phuong thuc loc va sap xep chinh
     },
     async filterAndSortProducts() {
       try {
@@ -615,30 +801,45 @@ export default {
           mauSacId: this.filterColor || null,
           kichCoId: this.filterSize || null,
           keyword: this.searchQuery || null,
-        };
+        }
 
         // Loai bo cac tham so null de khong gui chung trong request URL
-        Object.keys(params).forEach(key => params[key] === null && delete params[key]);
+        Object.keys(params).forEach((key) => params[key] === null && delete params[key])
 
-        const response = await axios.get(`${this.baseUrl}/api/chi-tiet-san-phams/filter`, { params });
+        const response = await axios.get(`${this.baseUrl}/api/chi-tiet-san-phams/filter`, {
+          params,
+        })
 
-        this.originalProducts = response.data.map(detail => {
-          console.log("Detail object from backend (Products-Detail.vue filterAndSortProducts):", detail); // Log the full detail object
+        this.originalProducts = response.data.map((detail) => {
+          console.log(
+            'Detail object from backend (Products-Detail.vue filterAndSortProducts):',
+            detail,
+          ) // Log the full detail object
 
-          let imageUrl = 'https://placehold.co/50x50/cccccc/000000?text=No+Image'; // Default fallback
+          let imageUrl = 'https://placehold.co/50x50/cccccc/000000?text=No+Image' // Default fallback
 
           // Prioritize image from the 'images' array if available and marked as representative
           if (detail.images && Array.isArray(detail.images) && detail.images.length > 0) {
-            const representative = detail.images.find(img => img.laAnhDaiDien);
-            if (representative && representative.urlAnh && typeof representative.urlAnh === 'string' && representative.urlAnh.trim() !== '') {
+            const representative = detail.images.find((img) => img.laAnhDaiDien)
+            if (
+              representative &&
+              representative.urlAnh &&
+              typeof representative.urlAnh === 'string' &&
+              representative.urlAnh.trim() !== ''
+            ) {
               // PREPEND baseUrl here
-              imageUrl = this.baseUrl + representative.urlAnh;
-            } else if (detail.images[0] && detail.images[0].urlAnh && typeof detail.images[0].urlAnh === 'string' && detail.images[0].urlAnh.trim() !== '') {
+              imageUrl = this.baseUrl + representative.urlAnh
+            } else if (
+              detail.images[0] &&
+              detail.images[0].urlAnh &&
+              typeof detail.images[0].urlAnh === 'string' &&
+              detail.images[0].urlAnh.trim() !== ''
+            ) {
               // Fallback to first image if no representative - PREPEND baseUrl here
-              imageUrl = this.baseUrl + detail.images[0].urlAnh;
+              imageUrl = this.baseUrl + detail.images[0].urlAnh
             }
           }
-          console.log(`Filtered Product Detail ID: ${detail.id}, Image URL: ${imageUrl}`); // Log image URL for each detail
+          console.log(`Filtered Product Detail ID: ${detail.id}, Image URL: ${imageUrl}`) // Log image URL for each detail
 
           return {
             id: detail.id,
@@ -662,90 +863,106 @@ export default {
             active: detail.tenTrangThaiRieng === 'dang_kinh_doanh', // For toggle switch logic
             moTaChiTiet: detail.moTaChiTiet, // Map moTaChiTiet
             maCtsp: detail.maCtsp, // Map maCtsp
-            images: detail.images ? detail.images.map(img => ({ // NEW: Map images for product detail
-                id: img.id,
-                url: this.baseUrl + img.urlAnh, // PREPEND baseUrl here for modal images too
-                laAnhDaiDien: img.laAnhDaiDien,
-                isNew: false,
-                file: null,
-                selected: true,
-                hover: false,
-            })) : [],
-          };
-        });
+            images: detail.images
+              ? detail.images.map((img) => ({
+                  // NEW: Map images for product detail
+                  id: img.id,
+                  url: this.baseUrl + img.urlAnh, // PREPEND baseUrl here for modal images too
+                  laAnhDaiDien: img.laAnhDaiDien,
+                  isNew: false,
+                  file: null,
+                  selected: true,
+                  hover: false,
+                }))
+              : [],
+          }
+        })
 
-        let filtered = [...this.originalProducts];
+        let filtered = [...this.originalProducts]
 
         // Apply sorting (loc da duoc backend xu ly, chi can sap xep)
         if (this.sortOrder) {
           filtered.sort((a, b) => {
             if (this.sortOrder === 'price-asc') {
-              return a.price - b.price;
+              return a.price - b.price
             } else if (this.sortOrder === 'price-desc') {
-              return b.price - a.price;
+              return b.price - a.price
             } else if (this.sortOrder === 'name-asc') {
-              return a.name.localeCompare(b.name);
+              return a.name.localeCompare(b.name)
             } else if (this.sortOrder === 'name-desc') {
-              return b.name.localeCompare(a.name);
+              return b.name.localeCompare(a.name)
             }
-            return 0;
-          });
+            return 0
+          })
         }
 
-        this.products = filtered;
-        this.currentPage = 1;
-        this.toast.info(`Da loc va sap xep, tim thay ${this.products.length} san pham.`);
+        this.products = filtered
+        this.currentPage = 1
+        this.toast.info(`Da loc va sap xep, tim thay ${this.products.length} san pham.`)
       } catch (error) {
-        console.error('Loi khi loc va sap xep san pham:', error.response ? error.response.data : error.message);
-        this.toast.error('Khong the loc va sap xep san pham. Vui long thu lai.');
+        console.error(
+          'Loi khi loc va sap xep san pham:',
+          error.response ? error.response.data : error.message,
+        )
+        this.toast.error('Khong the loc va sap xep san pham. Vui long thu lai.')
       }
     },
     async loadParentProductInfo() {
-      const parentProductId = this.newProductDetail.parentProductId;
+      const parentProductId = this.newProductDetail.parentProductId
       if (!parentProductId) {
-        this.newProductDetail.name = '';
-        this.newProductDetail.image = '';
-        return;
+        this.newProductDetail.name = ''
+        this.newProductDetail.image = ''
+        return
       }
 
       try {
-        const response = await axios.get(`${this.baseUrl}/api/san-phams/${parentProductId}`);
-        const parentProduct = response.data;
-        this.newProductDetail.name = parentProduct.tenSanPham;
+        const response = await axios.get(`${this.baseUrl}/api/san-phams/${parentProductId}`)
+        const parentProduct = response.data
+        this.newProductDetail.name = parentProduct.tenSanPham
         // Prepend baseUrl for parent product image as well
-        this.newProductDetail.image = (parentProduct.urlAnhDaiDien ? this.baseUrl + parentProduct.urlAnhDaiDien : 'https://placehold.co/50x50/cccccc/000000?text=No+Image');
-        this.toast.success('Da tai thong tin san pham goc!');
+        this.newProductDetail.image = parentProduct.urlAnhDaiDien
+          ? this.baseUrl + parentProduct.urlAnhDaiDien
+          : 'https://placehold.co/50x50/cccccc/000000?text=No+Image'
+        this.toast.success('Da tai thong tin san pham goc!')
       } catch (error) {
-        console.error('Loi khi tai thong tin san pham goc:', error);
-        this.newProductDetail.name = '';
-        this.newProductDetail.image = '';
-        this.toast.error('Khong tim thay san pham goc voi ID nay. Vui long kiem tra lai.');
+        console.error('Loi khi tai thong tin san pham goc:', error)
+        this.newProductDetail.name = ''
+        this.newProductDetail.image = ''
+        this.toast.error('Khong tim thay san pham goc voi ID nay. Vui long kiem tra lai.')
       }
     },
     async addNewProductDetail() {
       if (!this.newProductDetail.parentProductId) {
-        this.toast.error('Vui long nhap ID san pham goc.');
-        return;
+        this.toast.error('Vui long nhap ID san pham goc.')
+        return
       }
       if (!this.newProductDetail.name) {
-        this.toast.error('ID san pham goc khong hop le hoac chua duoc tai thong tin.');
-        return;
+        this.toast.error('ID san pham goc khong hop le hoac chua duoc tai thong tin.')
+        return
       }
       if (this.newProductDetail.quantity < 0 || this.newProductDetail.price < 0) {
-        this.toast.error('So luong va gia phai lon hon hoac bang 0.');
-        return;
+        this.toast.error('So luong va gia phai lon hon hoac bang 0.')
+        return
       }
-      if (!this.newProductDetail.brand || !this.newProductDetail.type ||
-          !this.newProductDetail.color || !this.newProductDetail.material ||
-          !this.newProductDetail.size || !this.newProductDetail.statusId) { // NEW: Validate statusId
-          this.toast.error('Vui long chon day du thong tin chi tiet (Hang, Loai giay, Mau sac, Chat lieu, Kich co, Trang thai).');
-          return;
+      if (
+        !this.newProductDetail.brand ||
+        !this.newProductDetail.type ||
+        !this.newProductDetail.color ||
+        !this.newProductDetail.material ||
+        !this.newProductDetail.size ||
+        !this.newProductDetail.statusId
+      ) {
+        // NEW: Validate statusId
+        this.toast.error(
+          'Vui long chon day du thong tin chi tiet (Hang, Loai giay, Mau sac, Chat lieu, Kich co, Trang thai).',
+        )
+        return
       }
 
       try {
         const newDetailData = {
           soLuongTonKho: parseInt(this.newProductDetail.quantity, 10),
-          moTaChiTiet: "", // Add this field to the form if needed
+          moTaChiTiet: '', // Add this field to the form if needed
           giaNhap: parseFloat(this.newProductDetail.price), // Assuming giaNhap = giaBan if no separate field
           giaBan: parseFloat(this.newProductDetail.price),
           maCtsp: `CTSP_${Date.now()}`, // Generate a unique code
@@ -755,72 +972,91 @@ export default {
           mauSac: this.newProductDetail.color, // Use ID
           kichCo: this.newProductDetail.size, // Use ID
           sanPham: this.newProductDetail.parentProductId, // Parent product ID
-        };
+        }
 
-        await axios.post(`${this.baseUrl}/api/chi-tiet-san-phams`, newDetailData);
-        this.toast.success('Them chi tiet san pham thanh cong!');
-        this.closeAddProductDetailModal();
-        this.refreshList(); // Reload the list to show the new item
+        await axios.post(`${this.baseUrl}/api/chi-tiet-san-phams`, newDetailData)
+        this.toast.success('Them chi tiet san pham thanh cong!')
+        this.closeAddProductDetailModal()
+        this.refreshList() // Reload the list to show the new item
       } catch (error) {
-        console.error('Loi khi them chi tiet san pham:', error.response ? error.response.data : error.message);
-        this.toast.error('Khong the them chi tiet san pham. Vui long thu lai.');
+        console.error(
+          'Loi khi them chi tiet san pham:',
+          error.response ? error.response.data : error.message,
+        )
+        this.toast.error('Khong the them chi tiet san pham. Vui long thu lai.')
       }
     },
     closeAddProductDetailModal() {
-        this.showAddProductDetailModal = false;
-        this.resetNewProductDetail();
+      this.showAddProductDetailModal = false
+      this.resetNewProductDetail()
     },
     resetNewProductDetail() {
       this.newProductDetail = {
         parentProductId: null,
         id: null,
-        image: '', name: '', brand: '', type: '', color: '', material: '', size: '', quantity: 0, price: 0, statusId: null // Reset to null
-      };
+        image: '',
+        name: '',
+        brand: '',
+        type: '',
+        color: '',
+        material: '',
+        size: '',
+        quantity: 0,
+        price: 0,
+        statusId: null, // Reset to null
+      }
     },
     async toggleStatus(id, event) {
-      const newActiveState = event.target.checked;
-      const product = this.products.find((p) => p.id === id);
+      const newActiveState = event.target.checked
+      const product = this.products.find((p) => p.id === id)
 
       if (!product) {
-        this.toast.error('Khong tim thay chi tiet san pham.');
-        event.target.checked = !newActiveState; // Revert toggle
-        return;
+        this.toast.error('Khong tim thay chi tiet san pham.')
+        event.target.checked = !newActiveState // Revert toggle
+        return
       }
 
       if (newActiveState && product.quantity === 0) {
-        this.toast.error('Khong the chuyen sang Dang ban khi so luong bang 0!');
-        event.target.checked = !newActiveState; // Revert toggle
-        return;
+        this.toast.error('Khong the chuyen sang Dang ban khi so luong bang 0!')
+        event.target.checked = !newActiveState // Revert toggle
+        return
       }
 
       try {
         // Backend expects 'active' boolean to update trangThaiSanPhamRieng
         // true -> dang_kinh_doanh, false -> ngung_kinh_doanh
-        const response = await axios.put(`${this.baseUrl}/api/chi-tiet-san-phams/${id}/toggle-status`, { active: newActiveState });
-        
-        product.active = newActiveState;
-        product.status = newActiveState ? 'dang_kinh_doanh' : 'ngung_kinh_doanh';
-        if (product.quantity === 0) { // Special case: if quantity is 0, status should be 'het_hang' regardless of toggle
-            product.status = 'het_hang';
+        const response = await axios.put(
+          `${this.baseUrl}/api/chi-tiet-san-phams/${id}/toggle-status`,
+          { active: newActiveState },
+        )
+
+        product.active = newActiveState
+        product.status = newActiveState ? 'dang_kinh_doanh' : 'ngung_kinh_doanh'
+        if (product.quantity === 0) {
+          // Special case: if quantity is 0, status should be 'het_hang' regardless of toggle
+          product.status = 'het_hang'
         }
 
         this.toast.success(
-          `Trang thai chi tiet san pham ${product.name} da duoc cap nhat thanh ${
-            this.getDisplayStatusText(product)
-          }.`
-        );
+          `Trang thai chi tiet san pham ${
+            product.name
+          } da duoc cap nhat thanh ${this.getDisplayStatusText(product)}.`,
+        )
       } catch (error) {
-        console.error('Loi khi cap nhat trang thai:', error.response ? error.response.data : error.message);
-        this.toast.error('Khong thể cap nhat trang thai. Vui long thu lai.');
-        event.target.checked = !newActiveState; // Revert the toggle if API call fails
+        console.error(
+          'Loi khi cap nhat trang thai:',
+          error.response ? error.response.data : error.message,
+        )
+        this.toast.error('Khong thể cap nhat trang thai. Vui long thu lai.')
+        event.target.checked = !newActiveState // Revert the toggle if API call fails
       }
     },
     openEditProductDetailModal(product) {
-      console.log('DEBUG: Product object passed to openEditProductDetailModal:', product);
-      console.log('DEBUG: product.brandId:', product.brandId);
-      console.log('DEBUG: product.typeId:', product.typeId);
-      console.log('DEBUG: brandsList:', this.brandsList);
-      console.log('DEBUG: categoriesList:', this.categoriesList);
+      console.log('DEBUG: Product object passed to openEditProductDetailModal:', product)
+      console.log('DEBUG: product.brandId:', product.brandId)
+      console.log('DEBUG: product.typeId:', product.typeId)
+      console.log('DEBUG: brandsList:', this.brandsList)
+      console.log('DEBUG: categoriesList:', this.categoriesList)
 
       this.editingProductDetail = {
         ...product,
@@ -829,28 +1065,35 @@ export default {
         color: product.colorId,
         material: product.materialId,
         size: product.sizeId,
-        statusId: product.statusId, 
+        statusId: product.statusId,
         moTaChiTiet: product.moTaChiTiet,
-        maCtsp: product.maCtsp // Map maCtsp
-      };
-      this.showEditProductDetailModal = true;
+        maCtsp: product.maCtsp, // Map maCtsp
+      }
+      this.showEditProductDetailModal = true
     },
     async saveEditedProductDetail() {
       if (this.editingProductDetail.quantity < 0 || this.editingProductDetail.price < 0) {
-        this.toast.error('So luong va gia phai lon hon hoac bang 0.');
-        return;
+        this.toast.error('So luong va gia phai lon hon hoac bang 0.')
+        return
       }
-      if (!this.editingProductDetail.brand || !this.editingProductDetail.type ||
-          !this.editingProductDetail.color || !this.editingProductDetail.material ||
-          !this.editingProductDetail.size || !this.editingProductDetail.statusId) {
-        this.toast.error('Vui long chon day du thong tin chi tiet (Hang, Loai giay, Mau sac, Chat lieu, Kich co, Trang thai).');
-        return;
+      if (
+        !this.editingProductDetail.brand ||
+        !this.editingProductDetail.type ||
+        !this.editingProductDetail.color ||
+        !this.editingProductDetail.material ||
+        !this.editingProductDetail.size ||
+        !this.editingProductDetail.statusId
+      ) {
+        this.toast.error(
+          'Vui long chon day du thong tin chi tiet (Hang, Loai giay, Mau sac, Chat lieu, Kich co, Trang thai).',
+        )
+        return
       }
 
       try {
         const updatedDetailData = {
           soLuongTonKho: parseInt(this.editingProductDetail.quantity, 10),
-          moTaChiTiet: this.editingProductDetail.moTaChiTiet || "",
+          moTaChiTiet: this.editingProductDetail.moTaChiTiet || '',
           giaNhap: parseFloat(this.editingProductDetail.price), // Assuming giaNhap = giaBan if no separate field
           giaBan: parseFloat(this.editingProductDetail.price),
           idTrangThaiRieng: Number(this.editingProductDetail.statusId),
@@ -858,103 +1101,121 @@ export default {
           mauSac: Number(this.editingProductDetail.color),
           kichCo: Number(this.editingProductDetail.size),
           sanPham: Number(this.editingProductDetail.productId),
-          maCtsp: this.editingProductDetail.maCtsp
-        };
+          maCtsp: this.editingProductDetail.maCtsp,
+        }
 
-        console.log('DEBUG: editingProductDetail.id before PUT:', this.editingProductDetail.id);
-        console.log('DEBUG: updatedDetailData before PUT:', updatedDetailData);
+        console.log('DEBUG: editingProductDetail.id before PUT:', this.editingProductDetail.id)
+        console.log('DEBUG: updatedDetailData before PUT:', updatedDetailData)
 
-        await axios.put(`${this.baseUrl}/api/chi-tiet-san-phams/${this.editingProductDetail.id}`, updatedDetailData);
-        this.toast.success('Cap nhat chi tiet san pham thanh cong!');
-        this.showEditProductDetailModal = false;
-        this.refreshList(); // Reload data to reflect changes
+        await axios.put(
+          `${this.baseUrl}/api/chi-tiet-san-phams/${this.editingProductDetail.id}`,
+          updatedDetailData,
+        )
+        this.toast.success('Cap nhat chi tiet san pham thanh cong!')
+        this.showEditProductDetailModal = false
+        this.refreshList() // Reload data to reflect changes
       } catch (error) {
-        console.error('Loi khi cap nhat chi tiet san pham:', error.response ? error.response.data : error.message);
-        this.toast.error('Khong the cap nhat chi tiet san pham. Vui long thu lai.');
+        console.error(
+          'Loi khi cap nhat chi tiet san pham:',
+          error.response ? error.response.data : error.message,
+        )
+        this.toast.error('Khong the cap nhat chi tiet san pham. Vui long thu lai.')
       }
     },
     async deleteProductDetail(id) {
       // Replace confirm with a custom modal if needed, as alert/confirm are blocked in iframe
-      if (confirm(`Ban co chac muon chuyen chi tiet san pham nay sang trang thai "Ngung ban" khong?`)) { // Hiển thị 'Ngung ban'
+      if (
+        confirm(`Ban co chac muon chuyen chi tiet san pham nay sang trang thai "Ngung ban" khong?`)
+      ) {
+        // Hiển thị 'Ngung ban'
         try {
           // Assuming backend soft deletes by changing status to 'ngung_kinh_doanh'
-          await axios.delete(`${this.baseUrl}/api/chi-tiet-san-phams/${id}`);
-          this.toast.warning('Chi tiet san pham da duoc chuyen sang trang thai "Ngung ban".'); // Hiển thị 'Ngung ban'
-          this.refreshList(); // Reload data to reflect changes
+          await axios.delete(`${this.baseUrl}/api/chi-tiet-san-phams/${id}`)
+          this.toast.warning('Chi tiet san pham da duoc chuyen sang trang thai "Ngung ban".') // Hiển thị 'Ngung ban'
+          this.refreshList() // Reload data to reflect changes
         } catch (error) {
-          console.error('Loi khi chuyen trang thai chi tiet san pham:', error.response ? error.response.data : error.message);
-          this.toast.error('Khong the chuyen trang thai chi tiet san pham. Vui long thu lai.');
+          console.error(
+            'Loi khi chuyen trang thai chi tiet san pham:',
+            error.response ? error.response.data : error.message,
+          )
+          this.toast.error('Khong the chuyen trang thai chi tiet san pham. Vui long thu lai.')
         }
       }
     },
     refreshList() {
-      this.searchQuery = '';
-      this.filterProduct = '';
-      this.filterBrand = '';
-      this.filterType = '';
-      this.filterColor = '';
-      this.filterMaterial = '';
-      this.filterSize = '';
-      this.sortOrder = '';
-      this.currentPage = 1;
-      this.loadProducts(); // Tai lai du lieu goc
-      this.toast.info('Danh sach chi tiet san pham da duoc lam moi.');
+      this.searchQuery = ''
+      this.filterProduct = ''
+      this.filterBrand = ''
+      this.filterType = ''
+      this.filterColor = ''
+      this.filterMaterial = ''
+      this.filterSize = ''
+      this.sortOrder = ''
+      this.currentPage = 1
+      this.loadProducts() // Tai lai du lieu goc
+      this.toast.info('Danh sach chi tiet san pham da duoc lam moi.')
     },
     changePage(page) {
       if (page >= 1 && page <= this.totalPages) {
-        this.currentPage = page;
+        this.currentPage = page
       }
     },
     getDisplayStatusText(product) {
       // Use the actual status string from backend for display
       if (product.status === 'het_hang') {
-        return 'Het hang';
+        return 'Het hang'
       } else if (product.status === 'dang_kinh_doanh') {
-        return 'Dang ban';
+        return 'Dang ban'
       } else if (product.status === 'ngung_kinh_doanh') {
-        return 'Ngung ban';
+        return 'Ngung ban'
       }
-      return product.status; // Fallback
+      return product.status // Fallback
     },
     getDisplayStatusName(backendStatusName) {
       // Helper to display Vietnamese names for backend status strings
       switch (backendStatusName) {
-        case 'dang_kinh_doanh': return 'Đang bán';
-        case 'het_hang': return 'Hết hàng';
-        case 'ngung_kinh_doanh': return 'Ngừng bán';
-        default: return backendStatusName;
+        case 'dang_kinh_doanh':
+          return 'Đang bán'
+        case 'het_hang':
+          return 'Hết hàng'
+        case 'ngung_kinh_doanh':
+          return 'Ngừng bán'
+        default:
+          return backendStatusName
       }
     },
     exportToExcel() {
-      const data = this.products.map(product => ({
+      const data = this.products.map((product) => ({
         'Ten san pham': product.name,
-        'Hang': product.brand,
+        Hang: product.brand,
         'Loai giay': product.type,
         'Mau sac': product.color,
         'Chat lieu': product.material,
         'Kich co': product.size,
         'So luong': product.quantity,
-        'Gia': product.price,
+        Gia: product.price,
         'Trang thai': this.getDisplayStatusText(product), // Use the helper function for display text
-      }));
+      }))
 
-      const worksheet = XLSX.utils.json_to_sheet(data);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, 'ChiTietSanPham');
-      XLSX.writeFile(workbook, 'ChiTietSanPham.xlsx');
-      this.toast.success('Xuat file Excel thanh cong!');
+      const worksheet = XLSX.utils.json_to_sheet(data)
+      const workbook = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'ChiTietSanPham')
+      XLSX.writeFile(workbook, 'ChiTietSanPham.xlsx')
+      this.toast.success('Xuat file Excel thanh cong!')
     },
 
     // NEW: Image Management Modal Methods
     async openImageManagementModal(productDetail) {
-      this.showImageManagementModal = true;
-      this.currentProductDetailIdForImages = productDetail.id;
-      this.newImageUrlInput = ''; // Clear URL input
+      this.showImageManagementModal = true
+      this.currentProductDetailIdForImages = productDetail.id
+      this.newImageUrlInput = '' // Clear URL input
 
       // Fetch images related to this product detail from backend
       try {
-        const response = await axios.get(`${this.baseUrl}/api/anhSanPhams/by-chi-tiet-san-pham/${productDetail.id}`);
-        this.imagesListForModal = response.data.map(img => ({
+        const response = await axios.get(
+          `${this.baseUrl}/api/anhSanPhams/by-chi-tiet-san-pham/${productDetail.id}`,
+        )
+        this.imagesListForModal = response.data.map((img) => ({
           id: img.id,
           url: this.baseUrl + img.urlAnh, // PREPEND baseUrl here for modal images too
           laAnhDaiDien: img.laAnhDaiDien,
@@ -963,47 +1224,52 @@ export default {
           selected: true, // Assume all existing images are "selected" for display
           hover: false,
           originalLaAnhDaiDien: img.laAnhDaiDien, // Store original representative status
-        }));
+        }))
 
-        this.originalImagesOfCurrentProductDetail = JSON.parse(JSON.stringify(this.imagesListForModal)); // Deep copy for comparison
-        
+        this.originalImagesOfCurrentProductDetail = JSON.parse(
+          JSON.stringify(this.imagesListForModal),
+        ) // Deep copy for comparison
+
         // Set the initially selected representative image ID
-        const representative = this.imagesListForModal.find(img => img.laAnhDaiDien);
-        this.selectedRepresentativeImageId = representative ? representative.id : null;
+        const representative = this.imagesListForModal.find((img) => img.laAnhDaiDien)
+        this.selectedRepresentativeImageId = representative ? representative.id : null
 
-        this.toast.success('Da tai anh cho chi tiet san pham.');
+        this.toast.success('Da tai anh cho chi tiet san pham.')
       } catch (error) {
-        console.error('Loi khi tai anh cho chi tiet san pham:', error.response ? error.response.data : error.message);
-        this.toast.error('Khong the tai anh cho chi tiet san pham. Vui long thu lai.');
-        this.imagesListForModal = []; // Clear if error
-        this.originalImagesOfCurrentProductDetail = [];
-        this.selectedRepresentativeImageId = null;
+        console.error(
+          'Loi khi tai anh cho chi tiet san pham:',
+          error.response ? error.response.data : error.message,
+        )
+        this.toast.error('Khong the tai anh cho chi tiet san pham. Vui long thu lai.')
+        this.imagesListForModal = [] // Clear if error
+        this.originalImagesOfCurrentProductDetail = []
+        this.selectedRepresentativeImageId = null
       }
 
       // Clear file input
       this.$nextTick(() => {
         if (this.$refs.imageFileInput) {
-          this.$refs.imageFileInput.value = '';
+          this.$refs.imageFileInput.value = ''
         }
-      });
+      })
     },
 
     closeImageManagementModal() {
-      this.showImageManagementModal = false;
-      this.currentProductDetailIdForImages = null;
-      this.imagesListForModal = [];
-      this.newImageUrlInput = '';
-      this.originalImagesOfCurrentProductDetail = [];
-      this.selectedRepresentativeImageId = null;
+      this.showImageManagementModal = false
+      this.currentProductDetailIdForImages = null
+      this.imagesListForModal = []
+      this.newImageUrlInput = ''
+      this.originalImagesOfCurrentProductDetail = []
+      this.selectedRepresentativeImageId = null
     },
 
     handleImageFileUpload(event) {
-      const files = event.target.files;
-      if (files.length === 0) return;
+      const files = event.target.files
+      if (files.length === 0) return
 
       for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const reader = new FileReader();
+        const file = files[i]
+        const reader = new FileReader()
         reader.onload = (e) => {
           const newImage = {
             id: 'temp_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9), // Temporary ID for frontend
@@ -1013,27 +1279,27 @@ export default {
             isNew: true, // Mark as new image to be uploaded
             selected: true, // Auto-select uploaded images
             hover: false,
-          };
-          this.imagesListForModal.push(newImage);
-        };
-        reader.readAsDataURL(file);
+          }
+          this.imagesListForModal.push(newImage)
+        }
+        reader.readAsDataURL(file)
       }
-      this.toast.success(`Da tai len ${files.length} anh de xem truoc.`);
+      this.toast.success(`Da tai len ${files.length} anh de xem truoc.`)
     },
 
     addImageUrlToModal() {
       if (!this.newImageUrlInput) {
-        this.toast.error('Vui long nhap URL anh.');
-        return;
+        this.toast.error('Vui long nhap URL anh.')
+        return
       }
-      // Basic URL validation
-      if (!/^https?:\/\/.+\.(jpg|png|gif|jpeg)$/i.test(this.newImageUrlInput)) {
-        this.toast.error('URL anh khong hop le. Chi chap nhan .jpg, .png, .gif, .jpeg.');
-        return;
-      }
+      //Basic URL validation
+      // if (!/^https?:\/\/.+\.(jpg|png|gif|jpeg)$/i.test(this.newImageUrlInput)) {
+      //   this.toast.error('URL anh khong hop le. Chi chap nhan .jpg, .png, .gif, .jpeg.')
+      //   return
+      // }
       if (this.imagesListForModal.some((img) => img.url === this.newImageUrlInput)) {
-        this.toast.warning('Anh nay da ton tai trong danh sach.');
-        return;
+        this.toast.warning('Anh nay da ton tai trong danh sach.')
+        return
       }
 
       const newImage = {
@@ -1044,77 +1310,78 @@ export default {
         isNew: true, // Mark as new image to be registered by URL
         selected: true,
         hover: false,
-      };
-      this.imagesListForModal.push(newImage);
-      this.newImageUrlInput = '';
-      this.toast.success('Da them anh tu URL.');
+      }
+      this.imagesListForModal.push(newImage)
+      this.newImageUrlInput = ''
+      this.toast.success('Da them anh tu URL.')
     },
 
     deleteImageFromModal(imageId) {
       if (confirm('Ban co chac chan muon xoa anh nay?')) {
-        this.imagesListForModal = this.imagesListForModal.filter((img) => img.id !== imageId);
+        this.imagesListForModal = this.imagesListForModal.filter((img) => img.id !== imageId)
         // If the deleted image was the representative, clear the representative selection
         if (this.selectedRepresentativeImageId === imageId) {
-          this.selectedRepresentativeImageId = null;
+          this.selectedRepresentativeImageId = null
         }
-        this.toast.success('Da xoa anh khoi danh sach.');
+        this.toast.success('Da xoa anh khoi danh sach.')
       }
     },
 
     toggleImageSelectionInModal(imageId) {
-      const image = this.imagesListForModal.find((img) => img.id === imageId);
+      const image = this.imagesListForModal.find((img) => img.id === imageId)
       if (image) {
-        image.selected = !image.selected;
+        image.selected = !image.selected
         // If unselected, and it was representative, clear representative selection
         if (!image.selected && this.selectedRepresentativeImageId === imageId) {
-          this.selectedRepresentativeImageId = null;
+          this.selectedRepresentativeImageId = null
         }
       }
     },
 
     toggleRepresentativeImage(imageId) {
-        // Find the image that was clicked
-        const clickedImage = this.imagesListForModal.find(img => img.id === imageId);
+      // Find the image that was clicked
+      const clickedImage = this.imagesListForModal.find((img) => img.id === imageId)
 
-        if (!clickedImage) return;
+      if (!clickedImage) return
 
-        // If the clicked image is already the representative, unselect it.
-        // Otherwise, make it the representative.
-        if (clickedImage.laAnhDaiDien) {
-            clickedImage.laAnhDaiDien = false;
-            this.selectedRepresentativeImageId = null;
-            this.toast.info('Da bo dat anh dai dien cho chi tiet san pham.');
-        } else {
-            // Unset all other images as representative
-            this.imagesListForModal.forEach(img => {
-                img.laAnhDaiDien = false;
-            });
-            // Set the clicked image as representative
-            clickedImage.laAnhDaiDien = true;
-            this.selectedRepresentativeImageId = imageId;
-            this.toast.info('Da dat anh dai dien cho chi tiet san pham.');
-        }
+      // If the clicked image is already the representative, unselect it.
+      // Otherwise, make it the representative.
+      if (clickedImage.laAnhDaiDien) {
+        clickedImage.laAnhDaiDien = false
+        this.selectedRepresentativeImageId = null
+        this.toast.info('Da bo dat anh dai dien cho chi tiet san pham.')
+      } else {
+        // Unset all other images as representative
+        this.imagesListForModal.forEach((img) => {
+          img.laAnhDaiDien = false
+        })
+        // Set the clicked image as representative
+        clickedImage.laAnhDaiDien = true
+        this.selectedRepresentativeImageId = imageId
+        this.toast.info('Da dat anh dai dien cho chi tiet san pham.')
+      }
     },
 
     async saveImagesForProductDetail() {
-      this.uploadingImages = true;
+      this.uploadingImages = true
       try {
-        const currentDetailId = this.currentProductDetailIdForImages;
+        const currentDetailId = this.currentProductDetailIdForImages
         if (!currentDetailId) {
-          this.toast.error('Khong co ID chi tiet san pham de luu anh.');
-          return;
+          this.toast.error('Khong co ID chi tiet san pham de luu anh.')
+          return
         }
 
-        const promises = [];
+        const promises = []
 
         // 1. Delete removed images
         const imagesToDelete = this.originalImagesOfCurrentProductDetail.filter(
-          (originalImg) => !this.imagesListForModal.some((currentImg) => currentImg.id === originalImg.id)
-        );
+          (originalImg) =>
+            !this.imagesListForModal.some((currentImg) => currentImg.id === originalImg.id),
+        )
         for (const imgToDelete of imagesToDelete) {
           // Only delete if it's an existing image (has a backend ID)
           if (!imgToDelete.isNew) {
-            promises.push(axios.delete(`${this.baseUrl}/api/anhSanPhams/${imgToDelete.id}`));
+            promises.push(axios.delete(`${this.baseUrl}/api/anhSanPhams/${imgToDelete.id}`))
           }
         }
 
@@ -1124,59 +1391,65 @@ export default {
             // New image (file upload or URL)
             if (image.file) {
               // Upload file
-              const formData = new FormData();
-              formData.append('file', image.file);
+              const formData = new FormData()
+              formData.append('file', image.file)
               const anhSanPhamDtoJson = JSON.stringify({
                 chiTietSpId: currentDetailId,
                 laAnhDaiDien: image.laAnhDaiDien,
-              });
-              formData.append('data', anhSanPhamDtoJson);
-              promises.push(axios.post(`${this.baseUrl}/api/anhSanPhams/upload`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-              }));
+              })
+              formData.append('data', anhSanPhamDtoJson)
+              promises.push(
+                axios.post(`${this.baseUrl}/api/anhSanPhams/upload`, formData, {
+                  headers: { 'Content-Type': 'multipart/form-data' },
+                }),
+              )
             } else if (image.url) {
               // Add from URL
               const anhSanPhamDto = {
                 chiTietSpId: currentDetailId,
                 urlAnh: image.url,
                 laAnhDaiDien: image.laAnhDaiDien,
-              };
-              promises.push(axios.post(`${this.baseUrl}/api/anhSanPhams/add-url`, anhSanPhamDto, {
-                headers: { 'Content-Type': 'application/json' },
-              }));
+              }
+              promises.push(
+                axios.post(`${this.baseUrl}/api/anhSanPhams/add-url`, anhSanPhamDto, {
+                  headers: { 'Content-Type': 'application/json' },
+                }),
+              )
             }
           } else {
             // Existing image - check if 'laAnhDaiDien' status changed
             const originalImage = this.originalImagesOfCurrentProductDetail.find(
-                (origImg) => origImg.id === image.id
-            );
+              (origImg) => origImg.id === image.id,
+            )
             if (originalImage && originalImage.laAnhDaiDien !== image.laAnhDaiDien) {
-                // Only update if laAnhDaiDien changed
-                const anhSanPhamDto = {
-                    chiTietSpId: currentDetailId,
-                    urlAnh: image.url.replace(this.baseUrl, ''), // Remove baseUrl before sending to backend
-                    laAnhDaiDien: image.laAnhDaiDien,
-                };
-                promises.push(axios.put(`${this.baseUrl}/api/anhSanPhams/${image.id}`, anhSanPhamDto, {
-                    headers: { 'Content-Type': 'application/json' },
-                }));
+              // Only update if laAnhDaiDien changed
+              const anhSanPhamDto = {
+                chiTietSpId: currentDetailId,
+                urlAnh: image.url.replace(this.baseUrl, ''), // Remove baseUrl before sending to backend
+                laAnhDaiDien: image.laAnhDaiDien,
+              }
+              promises.push(
+                axios.put(`${this.baseUrl}/api/anhSanPhams/${image.id}`, anhSanPhamDto, {
+                  headers: { 'Content-Type': 'application/json' },
+                }),
+              )
             }
           }
         }
 
-        await Promise.all(promises);
-        this.toast.success('Da luu tat ca anh thanh cong!');
-        this.closeImageManagementModal();
-        this.refreshList(); // Reload main product list to show updated images
+        await Promise.all(promises)
+        this.toast.success('Da luu tat ca anh thanh cong!')
+        this.closeImageManagementModal()
+        this.refreshList() // Reload main product list to show updated images
       } catch (error) {
-        console.error('Loi khi luu anh:', error.response ? error.response.data : error.message);
-        this.toast.error('Khong the luu anh. Vui long thu lai.');
+        console.error('Loi khi luu anh:', error.response ? error.response.data : error.message)
+        this.toast.error('Khong the luu anh. Vui long thu lai.')
       } finally {
-        this.uploadingImages = false;
+        this.uploadingImages = false
       }
     },
   },
-};
+}
 </script>
 
 <style scoped>
@@ -1266,14 +1539,14 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #8B0000;
+  background-color: #8b0000;
   transition: 0.4s;
   border-radius: 24px;
 }
 
 .slider:before {
   position: absolute;
-  content: "";
+  content: '';
   height: 18px;
   width: 18px;
   left: 3px;
@@ -1341,7 +1614,7 @@ input:checked + .slider:before {
 }
 
 .image-item.image-representative {
-    box-shadow: 0 0 0 3px #28a745; /* Green border for representative image */
+  box-shadow: 0 0 0 3px #28a745; /* Green border for representative image */
 }
 
 .image-dimming-overlay {
@@ -1370,27 +1643,27 @@ input:checked + .slider:before {
 }
 
 .image-radio-group {
-    position: absolute;
-    bottom: 5px;
-    left: 5px;
-    z-index: 10;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 2px 5px;
-    border-radius: 3px;
-    display: flex;
-    flex-direction: column; /* Stack radio buttons vertically */
-    align-items: flex-start;
-    font-size: 0.75rem;
-    gap: 2px; /* Small gap between radio items */
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 2px 5px;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column; /* Stack radio buttons vertically */
+  align-items: flex-start;
+  font-size: 0.75rem;
+  gap: 2px; /* Small gap between radio items */
 }
 
-.image-radio-item input[type="radio"] {
-    margin-right: 3px;
-    width: 12px;
-    height: 12px;
+.image-radio-item input[type='radio'] {
+  margin-right: 3px;
+  width: 12px;
+  height: 12px;
 }
 .image-radio-item label {
-    margin-bottom: 0; /* Remove default margin for labels */
+  margin-bottom: 0; /* Remove default margin for labels */
 }
 
 .image-actions-overlay {
